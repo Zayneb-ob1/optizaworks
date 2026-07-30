@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+  scroll-padding-top: 92px;
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: #fcfafd;
+  color: #211c24;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(106, 13, 173, 0.18);
+  color: #1f092c;
+}
+
+a,
+button,
+input,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid #6a0dad;
+  outline-offset: 3px;
+}
+
+@layer components {
+  .site-container {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
