@@ -82,7 +82,7 @@ export default async function ServicesPage() {
         </div>
       </section>
 
-      <section className="bg-white py-10 sm:py-16">
+      <section className="bg-neutral-50 py-10 sm:py-16">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           {services.map((service, index) => {
             const Icon = serviceIcons[service.icon];
@@ -111,7 +111,7 @@ export default async function ServicesPage() {
                     {service.includes.map((item) => (
                       <div
                         key={item}
-                        className="flex min-h-16 items-center gap-3 rounded-2xl border border-primary/10 bg-neutral-50 px-4 py-3"
+                        className="flex min-h-16 items-center gap-3 rounded-2xl border border-primary/10 bg-white px-4 py-3"
                       >
                         <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-accent">
                           <Check size={14} strokeWidth={2} />

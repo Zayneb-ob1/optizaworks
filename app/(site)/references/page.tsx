@@ -142,7 +142,7 @@ export default async function ReferencesPage() {
                     fill
                     loading="lazy"
                     quality={82}
-                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 270px"
+                    sizes="(max-width: 640px) calc(50vw - 28px), (max-width: 1024px) calc(33vw - 28px), 270px"
                     className="object-contain transition-transform duration-300 group-hover:scale-[1.04]"
                   />
                 </span>

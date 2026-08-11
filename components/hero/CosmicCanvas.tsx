@@ -49,14 +49,17 @@ export default function CosmicCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (!active) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const context = canvas.getContext("2d", { alpha: true });
+    const context = canvas.getContext("2d", { alpha: true, desynchronized: true });
     if (!context) return;
 
-    const random = createRandom(mobile ? 48131 : 92741);
-    const starCount = mobile ? 52 : 88;
-    const energyCount = mobile ? 44 : 104;
+    const mobileEffects = mobile || window.matchMedia("(max-width: 767px)").matches;
+    const random = createRandom(mobileEffects ? 48131 : 92741);
+    const starCount = mobileEffects ? 52 : 88;
+    const energyCount = mobileEffects ? 44 : 104;
     const stars: Star[] = Array.from({ length: starCount }, () => ({
       x: random(),
       y: random(),
@@ -86,12 +89,13 @@ export default function CosmicCanvas({
     let smoothPointerY = 0;
     let pulseStartedAt = -1;
     let nextPulseAt = performance.now() + 10000 + random() * 5000;
+    let lastMobilePaint = 0;
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
       width = Math.max(1, bounds.width);
       height = Math.max(1, bounds.height);
-      const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.15 : 1.5);
+      const dpr = Math.min(window.devicePixelRatio || 1, mobileEffects ? 1.15 : 1.5);
       const nextWidth = Math.round(width * dpr);
       const nextHeight = Math.round(height * dpr);
       if (canvas.width !== nextWidth || canvas.height !== nextHeight) {
@@ -106,16 +110,27 @@ export default function CosmicCanvas({
         centerY = portalBounds.top - bounds.top + portalBounds.height / 2;
         portalRadius = Math.min(portalBounds.width, portalBounds.height) / 2;
       } else {
-        centerX = width * (mobile ? 0.5 : 0.7);
-        centerY = height * (mobile ? 0.73 : 0.51);
+        centerX = width * (mobileEffects ? 0.5 : 0.7);
+        centerY = height * (mobileEffects ? 0.73 : 0.51);
         portalRadius = Math.min(width, height) * 0.35;
       }
     };
 
     const draw = (now: number) => {
+      if (
+        mobileEffects &&
+        !reducedMotion &&
+        lastMobilePaint > 0 &&
+        now - lastMobilePaint < 1000 / 45
+      ) {
+        frame = requestAnimationFrame(draw);
+        return;
+      }
+      lastMobilePaint = now;
+
       context.clearRect(0, 0, width, height);
       const time = now / 1000;
-      const pointer = pointerRef.current ?? { x: 0, y: 0 };
+      const pointer = pointerRef.current;
       smoothPointerX += (pointer.x - smoothPointerX) * 0.035;
       smoothPointerY += (pointer.y - smoothPointerY) * 0.035;
 
@@ -129,7 +144,7 @@ export default function CosmicCanvas({
       }
 
       let pulseAmount = 0;
-      if (!mobile && !reducedMotion && now >= nextPulseAt && pulseStartedAt < 0) {
+      if (!mobileEffects && !reducedMotion && now >= nextPulseAt && pulseStartedAt < 0) {
         pulseStartedAt = now;
       }
       if (pulseStartedAt >= 0) {

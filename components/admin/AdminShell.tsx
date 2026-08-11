@@ -58,6 +58,8 @@ export default function AdminShell({ children, admin, unreadMessages }: AdminShe
             alt="Optizaworks admin"
             width={230}
             height={90}
+            quality={75}
+            sizes="230px"
             priority
             className="absolute -left-1 top-1/2 max-w-none -translate-y-1/2 brightness-0 invert"
           />

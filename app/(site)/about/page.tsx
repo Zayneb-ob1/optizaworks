@@ -82,7 +82,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-24 sm:py-32">
+      <section className="bg-neutral-100 py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24 lg:px-10">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
@@ -195,7 +195,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-28">
+      <section className="bg-neutral-50 py-20 sm:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div className="grid gap-10 rounded-4xl bg-neutral-100 px-7 py-12 sm:px-12 lg:grid-cols-[1fr_auto] lg:items-center lg:px-16 lg:py-16">
             <div>

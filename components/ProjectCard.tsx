@@ -1,27 +1,43 @@
 "use client";
 
-import { m } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, Globe2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
 import type { Project } from "@/shared/content/projects";
 
+type ProjectCardData = Pick<
+  Project,
+  | "slug"
+  | "title"
+  | "categoryLabel"
+  | "image"
+  | "imageFit"
+  | "year"
+  | "website"
+  | "clientLogo"
+>;
+
 type ProjectCardProps = {
-  project: Project;
+  project: ProjectCardData;
   index?: number;
 };
 
 export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
   const { t } = useLanguage();
+  const reducedMotion = useReducedMotion();
   const containsLogo = project.imageFit === "contain";
 
   return (
     <m.article
-      initial={{ opacity: 0, y: 20 }}
+      initial={reducedMotion ? false : { opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      layout
+      transition={{
+        duration: reducedMotion ? 0 : 0.4,
+        delay: reducedMotion ? 0 : index * 0.05,
+      }}
+      layout={!reducedMotion}
     >
       <Link href={`/portfolio/${project.slug}`} className="group block">
         <div
@@ -36,7 +52,9 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
               `Aperçu du site web ${project.title}`,
             )}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
+            quality={75}
+            sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 1024px) calc(50vw - 42px), (max-width: 1280px) 31vw, 392px"
             className={`transition-transform duration-700 ease-out group-hover:scale-[1.025] ${
               containsLogo ? "object-contain p-8 sm:p-10" : "object-cover"
             }`}
@@ -49,6 +67,8 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
                   alt={t(`${project.title} logo`, `Logo de ${project.title}`)}
                   fill
                   sizes="128px"
+                  loading="lazy"
+                  quality={75}
                   className="object-contain p-2"
                 />
               </span>

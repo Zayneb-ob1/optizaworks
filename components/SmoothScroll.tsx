@@ -7,6 +7,7 @@ type LenisInstance = InstanceType<(typeof import("lenis"))["default"]>;
 export default function SmoothScroll() {
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
     let lenis: LenisInstance | null = null;
     let frame = 0;
     let loading = false;
@@ -20,7 +21,7 @@ export default function SmoothScroll() {
     }
 
     function startFrame() {
-      if (!lenis || frame || document.hidden || motionQuery.matches) return;
+      if (!lenis || frame || document.hidden || motionQuery.matches || mobileQuery.matches) return;
       const raf = (time: number) => {
         lenis?.raf(time);
         frame = requestAnimationFrame(raf);
@@ -35,11 +36,11 @@ export default function SmoothScroll() {
     }
 
     async function initialize() {
-      if (disposed || loading || lenis || motionQuery.matches) return;
+      if (disposed || loading || lenis || motionQuery.matches || mobileQuery.matches) return;
       loading = true;
       try {
         const { default: Lenis } = await import("lenis");
-        if (disposed || motionQuery.matches) return;
+        if (disposed || motionQuery.matches || mobileQuery.matches) return;
         lenis = new Lenis({ duration: 1.1, smoothWheel: true });
         startFrame();
       } catch {
@@ -61,7 +62,7 @@ export default function SmoothScroll() {
     }
 
     function scheduleInitialize() {
-      if (disposed || loading || lenis || motionQuery.matches) return;
+      if (disposed || loading || lenis || motionQuery.matches || mobileQuery.matches) return;
       cancelScheduledInitialize();
 
       if ("requestIdleCallback" in window) {
@@ -86,8 +87,8 @@ export default function SmoothScroll() {
       else startFrame();
     }
 
-    function handleMotionPreference() {
-      if (motionQuery.matches) {
+    function handlePreferenceChange() {
+      if (motionQuery.matches || mobileQuery.matches) {
         cancelScheduledInitialize();
         destroyLenis();
       } else {
@@ -96,14 +97,16 @@ export default function SmoothScroll() {
     }
 
     document.addEventListener("visibilitychange", handleVisibility);
-    motionQuery.addEventListener("change", handleMotionPreference);
+    motionQuery.addEventListener("change", handlePreferenceChange);
+    mobileQuery.addEventListener("change", handlePreferenceChange);
     scheduleInitialize();
 
     return () => {
       disposed = true;
       cancelScheduledInitialize();
       document.removeEventListener("visibilitychange", handleVisibility);
-      motionQuery.removeEventListener("change", handleMotionPreference);
+      motionQuery.removeEventListener("change", handlePreferenceChange);
+      mobileQuery.removeEventListener("change", handlePreferenceChange);
       destroyLenis();
     };
   }, []);

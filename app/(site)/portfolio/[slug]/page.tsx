@@ -90,7 +90,8 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
               )}
               fill
               priority
-              sizes="100vw"
+              quality={76}
+              sizes="(max-width: 640px) calc(100vw - 40px), (max-width: 1024px) calc(100vw - 64px), (max-width: 1280px) calc(100vw - 80px), 1216px"
               className={
                 project.imageFit === "contain"
                   ? "object-contain p-12 sm:p-20"
@@ -101,7 +102,7 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
         </div>
       </section>
 
-      <section className="bg-white py-20 sm:py-28">
+      <section className="bg-neutral-100 py-20 sm:py-28">
         <div className="mx-auto grid max-w-5xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.65fr_1.35fr] lg:gap-24 lg:px-10">
           <aside>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">

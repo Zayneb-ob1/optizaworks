@@ -12,7 +12,7 @@ import { serviceIcons } from "@/components/services/service-icons";
 import type { Service } from "@/shared/content/services";
 
 type ServicesCarouselProps = {
-  services: Service[];
+  services: Pick<Service, "slug" | "title" | "details" | "includes" | "icon">[];
 };
 
 export default function ServicesCarousel({ services }: ServicesCarouselProps) {
@@ -23,40 +23,22 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
   const serviceCount = services.length;
   const orbitStep = serviceCount > 0 ? 360 / serviceCount : 0;
   const compactOrbit = serviceCount > 8;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [orbitRotation, setOrbitRotation] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [paused, setPaused] = useState(false);
+  const [orbitPosition, setOrbitPosition] = useState(0);
+  const activeIndex = serviceCount > 0
+    ? ((orbitPosition % serviceCount) + serviceCount) % serviceCount
+    : 0;
+  const orbitRotation = orbitPosition * orbitStep;
   const activeService = services[activeIndex] ?? services[0];
 
   useEffect(() => {
-    if (serviceCount === 0) {
-      setActiveIndex(0);
-      setOrbitRotation(0);
-      return;
-    }
-
-    const nextIndex = activeIndex < serviceCount ? activeIndex : 0;
-    if (nextIndex !== activeIndex) setActiveIndex(nextIndex);
-
-    setOrbitRotation((current) => {
-      const base = nextIndex * orbitStep;
-      const nearest = base + Math.round((current - base) / 360) * 360;
-      return Math.abs(nearest - current) < 0.001 ? current : nearest;
-    });
-  }, [activeIndex, orbitStep, serviceCount]);
-
-  useEffect(() => {
-    if (paused || !inView || reducedMotion || serviceCount < 2) return;
+    if (!inView || reducedMotion || serviceCount < 2) return;
 
     const timer = window.setInterval(() => {
-      setDirection(1);
-      setActiveIndex((index) => (index + 1) % serviceCount);
-      setOrbitRotation((rotation) => rotation + orbitStep);
+      setOrbitPosition((position) => position + 1);
     }, 5200);
 
     return () => window.clearInterval(timer);
-  }, [inView, orbitStep, paused, reducedMotion, serviceCount]);
+  }, [inView, reducedMotion, serviceCount]);
 
   if (!activeService) return null;
   const ActiveIcon = serviceIcons[activeService.icon];
@@ -69,52 +51,42 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
 
   function selectService(index: number) {
     if (index === activeIndex || serviceCount < 2) return;
-    const clockwiseSteps = (index - activeIndex + serviceCount) % serviceCount;
-    setDirection(1);
-    setOrbitRotation((rotation) => rotation + clockwiseSteps * orbitStep);
-    setActiveIndex(index);
+    setOrbitPosition((position) => {
+      const currentIndex = ((position % serviceCount) + serviceCount) % serviceCount;
+      const clockwiseSteps = (index - currentIndex + serviceCount) % serviceCount;
+      return position + clockwiseSteps;
+    });
   }
 
   function previous() {
     if (serviceCount < 2) return;
-    setDirection(-1);
-    setOrbitRotation((rotation) => rotation - orbitStep);
-    setActiveIndex((index) => (index - 1 + serviceCount) % serviceCount);
+    setOrbitPosition((position) => position - 1);
   }
 
   function next() {
     if (serviceCount < 2) return;
-    setDirection(1);
-    setOrbitRotation((rotation) => rotation + orbitStep);
-    setActiveIndex((index) => (index + 1) % serviceCount);
+    setOrbitPosition((position) => position + 1);
   }
 
   return (
     <div
       ref={carouselRef}
-      className="relative mt-14 overflow-hidden rounded-[2.5rem] border border-white/10 bg-primary-dark px-5 py-10 text-white shadow-[0_24px_80px_-48px_rgba(61,17,108,0.55)] sm:px-8 sm:py-14 lg:px-12"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
+      className="relative mt-8 px-5 py-2 text-primary sm:mt-10 sm:px-8 sm:py-4 lg:px-8"
     >
-      <div className="pointer-events-none absolute -right-36 top-1/2 h-[430px] w-[430px] -translate-y-1/2 rounded-full border border-white/[0.04]" />
-      <div className="pointer-events-none absolute -right-20 top-1/2 h-[310px] w-[310px] -translate-y-1/2 rounded-full border border-white/[0.04]" />
-
-      <div className="relative grid items-center gap-14 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+      <div className="relative grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-14">
         <div className="relative mx-auto w-full max-w-[430px]">
           <div className="relative mx-auto aspect-square w-[300px] sm:w-[370px]">
-            <div className="absolute inset-[10%] rounded-full border border-white/25" />
-            <div className="absolute inset-[25%] rounded-full border border-dashed border-white/10" />
-            <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/20" />
+            <div className="absolute inset-[10%] rounded-full border-2 border-primary/55" />
+            <div className="absolute inset-[25%] rounded-full border border-dashed border-primary/25" />
+            <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/45" />
 
-            <div className="absolute -left-5 top-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 flex-col gap-2 sm:-left-8">
+            <div className="absolute -right-5 top-1/2 z-20 flex translate-x-1/2 -translate-y-1/2 flex-col gap-2 sm:-right-8">
               <button
                 type="button"
                 onClick={previous}
                 disabled={serviceCount < 2}
                 aria-label={t("Previous service", "Service précédent")}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-sm transition-[transform,background-color,border-color,color] hover:-translate-y-0.5 hover:border-white/40 hover:bg-white hover:text-primary focus-visible:outline-white disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-white text-primary shadow-sm transition-[transform,background-color,border-color,color] hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary hover:text-white focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
               >
                 <ArrowLeft size={15} aria-hidden="true" />
               </button>
@@ -123,7 +95,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                 onClick={next}
                 disabled={serviceCount < 2}
                 aria-label={t("Next service", "Service suivant")}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white shadow-sm transition-[transform,background-color,border-color,color] hover:translate-x-0.5 hover:border-white/40 hover:bg-white hover:text-primary focus-visible:outline-white disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-white text-primary shadow-sm transition-[transform,background-color,border-color,color] hover:translate-x-0.5 hover:border-primary/40 hover:bg-primary hover:text-white focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
               >
                 <ArrowRight size={15} aria-hidden="true" />
               </button>
@@ -162,14 +134,14 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                           `Afficher ${service.title}`,
                         )}
                         aria-pressed={active}
-                        className={`border transition-[width,height,background-color,border-color,color,border-radius,box-shadow] duration-500 focus-visible:outline-white motion-reduce:transition-none ${
+                        className={`border transition-[width,height,background-color,border-color,color,border-radius,box-shadow] duration-500 focus-visible:outline-primary motion-reduce:transition-none ${
                           active
-                            ? `flex flex-col items-center justify-center gap-2 rounded-2xl border-white bg-white px-2 text-accent shadow-[0_16px_35px_-14px_rgba(0,0,0,0.45)] ${
+                            ? `flex flex-col items-center justify-center gap-2 rounded-2xl border-primary bg-primary px-2 text-white shadow-[0_16px_35px_-14px_rgba(31,9,44,0.58)] ${
                                 compactOrbit
                                   ? "h-[80px] w-[96px] sm:h-[92px] sm:w-[108px]"
                                   : "h-[92px] w-[112px] sm:h-[104px] sm:w-[126px]"
                               }`
-                            : `flex items-center justify-center rounded-xl border-white/15 bg-white/10 text-white/70 shadow-[0_8px_24px_-14px_rgba(0,0,0,0.45)] backdrop-blur-sm hover:border-white/40 hover:bg-white/15 hover:text-white ${
+                            : `flex items-center justify-center rounded-xl border-primary/10 bg-white text-primary shadow-[0_8px_24px_-14px_rgba(31,9,44,0.3)] hover:border-primary/45 hover:bg-neutral ${
                                 compactOrbit
                                   ? "h-10 w-10 sm:h-12 sm:w-12"
                                   : "h-12 w-12 sm:h-14 sm:w-14"
@@ -200,36 +172,28 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
         </div>
 
         <div className="min-h-[320px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/45">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary/45">
             {t("Service", "Service")} {String(activeIndex + 1).padStart(2, "0")} /{" "}
             {String(serviceCount).padStart(2, "0")}
           </p>
 
-          <m.div
-              key={activeService.slug}
-              initial={
-                reducedMotion ? false : { opacity: 0.35, x: direction * 22 }
-              }
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: reducedMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-6"
-            >
+          <div key={activeService.slug} className="mt-6">
               <div className="flex items-center gap-4">
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-white">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral text-primary">
                   <ActiveIcon size={25} strokeWidth={1.65} aria-hidden="true" />
                 </span>
-                <h3 className="text-3xl font-semibold tracking-[-0.035em] text-white sm:text-4xl">
+                <h3 className="text-3xl font-semibold tracking-[-0.035em] text-primary sm:text-4xl">
                   {activeService.title}
                 </h3>
               </div>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/65">
+              <p className="mt-5 max-w-xl text-sm leading-7 text-neutral-500">
                 {activeService.details}
               </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 {activeService.includes.slice(0, 4).map((item) => (
                   <span
                     key={item}
-                    className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-medium text-white/75"
+                    className="rounded-full border border-primary/10 bg-neutral-50 px-3 py-2 text-xs font-medium text-primary/70"
                   >
                     {item}
                   </span>
@@ -238,19 +202,19 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={`/services#${activeService.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-accent hover:text-white motion-reduce:transition-none"
+                  className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary motion-reduce:transition-none"
                 >
                   {t("Explore service", "Découvrir le service")}
                   <ArrowRight size={16} aria-hidden="true" />
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-white transition-colors hover:border-white/40 hover:bg-white/10 motion-reduce:transition-none"
+                  className="inline-flex items-center gap-2 rounded-full border border-primary/10 bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:border-accent/35 hover:text-accent motion-reduce:transition-none"
                 >
                   {t("All services", "Tous les services")}
                 </Link>
               </div>
-          </m.div>
+          </div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageProvider";
-import { projectTypes, type ProjectType } from "@/shared/content/projects";
+import { projectTypes, type ProjectType } from "@/shared/content/project-types";
 
 const labels: Record<ProjectType, [string, string]> = {
   web: ["Web", "Web"],

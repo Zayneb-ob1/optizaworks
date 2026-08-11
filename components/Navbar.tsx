@@ -31,6 +31,8 @@ function BrandLogo({ inverted }: { inverted: boolean }) {
         width={240}
         height={240}
         priority
+        quality={75}
+        sizes="(max-width: 640px) 214px, 220px"
         className={`absolute -left-1 top-1/2 max-w-none -translate-y-1/2 transition-[filter] duration-300 ${
           inverted
             ? "brightness-0 invert drop-shadow-[0_3px_12px_rgba(255,255,255,0.16)]"
@@ -42,8 +44,8 @@ function BrandLogo({ inverted }: { inverted: boolean }) {
 }
 
 type NavbarProps = {
-  services: Service[];
-  projects: Project[];
+  services: Pick<Service, "slug" | "title" | "description" | "icon">[];
+  projects: Pick<Project, "slug" | "title" | "categoryLabel" | "image">[];
 };
 
 export default function Navbar({ services, projects }: NavbarProps) {
@@ -60,6 +62,13 @@ export default function Navbar({ services, projects }: NavbarProps) {
       pathname === "/"
         ? document.getElementById("services")
         : null;
+    let solidTriggerTop = solidTrigger?.offsetTop ?? 0;
+    let lastScrolled: boolean | undefined;
+    const commitScrolled = (nextScrolled: boolean) => {
+      if (lastScrolled === nextScrolled) return;
+      lastScrolled = nextScrolled;
+      setScrolled(nextScrolled);
+    };
     const update = () => {
       if (frame) return;
       frame = requestAnimationFrame(() => {
@@ -67,19 +76,32 @@ export default function Navbar({ services, projects }: NavbarProps) {
         if (pathname === "/" && solidTrigger) {
           const navbarOffset = 88;
           const scrollPosition = window.scrollY + navbarOffset;
-          setScrolled(scrollPosition >= solidTrigger.offsetTop);
+          commitScrolled(scrollPosition >= solidTriggerTop);
           return;
         }
 
-        setScrolled(window.scrollY > 40);
+        commitScrolled(window.scrollY > 40);
       });
     };
+    const handleResize = () => {
+      solidTriggerTop = solidTrigger?.offsetTop ?? 0;
+      update();
+    };
+    const resizeObserver = solidTrigger ? new ResizeObserver(handleResize) : null;
+    if (solidTrigger) {
+      resizeObserver?.observe(solidTrigger);
+      const precedingSection = solidTrigger.previousElementSibling;
+      if (precedingSection instanceof HTMLElement) {
+        resizeObserver?.observe(precedingSection);
+      }
+    }
     update();
     window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
+      window.removeEventListener("resize", handleResize);
+      resizeObserver?.disconnect();
       if (frame) cancelAnimationFrame(frame);
     };
   }, [pathname]);
@@ -498,6 +520,8 @@ export default function Navbar({ services, projects }: NavbarProps) {
                         alt=""
                         fill
                         sizes="112px"
+                        quality={75}
+                        loading="lazy"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </span>

@@ -5,7 +5,7 @@ import PortfolioPagination from "@/components/PortfolioPagination";
 import {
   projectTypes,
   type ProjectType,
-} from "@/shared/content/projects";
+} from "@/shared/content/project-types";
 import { getPublishedProjects } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
 import { translate } from "@/shared/i18n/config";
@@ -50,6 +50,16 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
     (currentPage - 1) * PROJECTS_PER_PAGE,
     currentPage * PROJECTS_PER_PAGE,
   );
+  const projectCards = pageProjects.map((project) => ({
+    slug: project.slug,
+    title: project.title,
+    categoryLabel: project.categoryLabel,
+    image: project.image,
+    imageFit: project.imageFit,
+    year: project.year,
+    website: project.website,
+    clientLogo: project.clientLogo,
+  }));
 
   return (
     <section className="min-h-screen bg-neutral-50 py-20 sm:py-28">
@@ -75,7 +85,7 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
           <FilterTabs active={activeType} />
         </div>
         <div className="mt-10 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {pageProjects.map((project, index) => (
+          {projectCards.map((project, index) => (
             <ProjectCard key={project.slug} project={project} index={index} />
           ))}
         </div>

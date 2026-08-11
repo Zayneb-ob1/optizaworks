@@ -4,6 +4,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageProvider";
+import ScrollReveal from "@/components/ScrollReveal";
 import type { Project } from "@/shared/content/projects";
 
 type HomeWorkShowcaseProps = {
@@ -15,8 +16,8 @@ export default function HomeWorkShowcase({ projects }: HomeWorkShowcaseProps) {
   const selected = projects.slice(0, 3);
 
   return (
-    <section aria-labelledby="work-heading" className="overflow-hidden bg-white py-14 sm:py-16">
-      <div className="site-container">
+    <section aria-labelledby="work-heading" className="overflow-hidden bg-neutral-100 py-14 sm:py-16">
+      <ScrollReveal className="site-container">
         <div className="mb-7 flex items-end justify-between gap-6">
           <div>
             <div className="flex items-center gap-3">
@@ -60,7 +61,7 @@ export default function HomeWorkShowcase({ projects }: HomeWorkShowcaseProps) {
                   fill
                   loading="lazy"
                   quality={76}
-                  sizes="(max-width: 640px) 78vw, (max-width: 1024px) 45vw, 23vw"
+                  sizes="(max-width: 640px) 78vw, (max-width: 1024px) 45vw, (max-width: 1280px) 31vw, 395px"
                   className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-[1.04] group-focus-visible:scale-[1.04]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary-dark via-primary-dark/10 to-transparent" />
@@ -84,7 +85,7 @@ export default function HomeWorkShowcase({ projects }: HomeWorkShowcaseProps) {
             </Link>
           ))}
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

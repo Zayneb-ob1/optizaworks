@@ -23,6 +23,8 @@ export default async function AdminLoginPage() {
             alt="Optizaworks"
             width={250}
             height={100}
+            quality={75}
+            sizes="250px"
             priority
             className="absolute -left-1 top-1/2 max-w-none -translate-y-1/2"
           />

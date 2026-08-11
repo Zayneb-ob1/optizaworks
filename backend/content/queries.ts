@@ -1,6 +1,7 @@
 import "server-only";
 
 import { and, asc, desc, eq } from "drizzle-orm";
+import { cache } from "react";
 import { db } from "@/backend/db/client";
 import {
   faqs,
@@ -14,7 +15,8 @@ import type { Faq } from "@/shared/content/faqs";
 import type { NewsItem } from "@/shared/content/news";
 import type { Partner, PartnerCategory } from "@/shared/content/partners";
 import type { Product } from "@/shared/content/products";
-import type { Project, ProjectType } from "@/shared/content/projects";
+import type { Project } from "@/shared/content/projects";
+import type { ProjectType } from "@/shared/content/project-types";
 import type { Service, ServiceIcon } from "@/shared/content/services";
 import type { Locale } from "@/shared/i18n/config";
 import {
@@ -25,7 +27,7 @@ import {
   localizeService,
 } from "@/shared/i18n/content";
 
-export function getPublishedServices(locale: Locale = "en"): Service[] {
+const getPublishedServicesCached = cache((locale: Locale): Service[] => {
   return db
     .select()
     .from(services)
@@ -45,6 +47,10 @@ export function getPublishedServices(locale: Locale = "en"): Service[] {
         locale,
       ),
     );
+});
+
+export function getPublishedServices(locale: Locale = "en"): Service[] {
+  return getPublishedServicesCached(locale);
 }
 
 function toProject(project: typeof projects.$inferSelect): Project {
@@ -66,15 +72,15 @@ function toProject(project: typeof projects.$inferSelect): Project {
   };
 }
 
-export function getPublishedProjects(options?: {
-  category?: ProjectType;
-  featuredOnly?: boolean;
-  limit?: number;
-  locale?: Locale;
-}): Project[] {
+const getPublishedProjectsCached = cache((
+  category: ProjectType | undefined,
+  featuredOnly: boolean,
+  limit: number | undefined,
+  locale: Locale,
+): Project[] => {
   const conditions = [eq(projects.published, true)];
-  if (options?.category) conditions.push(eq(projects.category, options.category));
-  if (options?.featuredOnly) conditions.push(eq(projects.featured, true));
+  if (category) conditions.push(eq(projects.category, category));
+  if (featuredOnly) conditions.push(eq(projects.featured, true));
 
   let rows = db
     .select()
@@ -83,20 +89,41 @@ export function getPublishedProjects(options?: {
     .orderBy(asc(projects.sortOrder), asc(projects.id))
     .all();
 
-  if (options?.limit) rows = rows.slice(0, options.limit);
-  return rows.map(toProject).map((project) => localizeProject(project, options?.locale ?? "en"));
+  if (limit) rows = rows.slice(0, limit);
+  return rows.map(toProject).map((project) => localizeProject(project, locale));
+});
+
+export function getPublishedProjects(options?: {
+  category?: ProjectType;
+  featuredOnly?: boolean;
+  limit?: number;
+  locale?: Locale;
+}): Project[] {
+  return getPublishedProjectsCached(
+    options?.category,
+    Boolean(options?.featuredOnly),
+    options?.limit,
+    options?.locale ?? "en",
+  );
 }
 
-export function getPublishedProject(
+const getPublishedProjectCached = cache((
   slug: string,
-  locale: Locale = "en",
-): Project | undefined {
+  locale: Locale,
+): Project | undefined => {
   const project = db
     .select()
     .from(projects)
     .where(and(eq(projects.slug, slug), eq(projects.published, true)))
     .get();
   return project ? localizeProject(toProject(project), locale) : undefined;
+});
+
+export function getPublishedProject(
+  slug: string,
+  locale: Locale = "en",
+): Project | undefined {
+  return getPublishedProjectCached(slug, locale);
 }
 
 export function getPublishedOrganizations(options?: {

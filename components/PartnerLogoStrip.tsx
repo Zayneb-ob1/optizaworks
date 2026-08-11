@@ -11,10 +11,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import ScrollReveal from "@/components/ScrollReveal";
 import type { Partner } from "@/shared/content/partners";
 
 type PartnerLogoStripProps = {
-  partners: Partner[];
+  partners: Pick<Partner, "name" | "shortName" | "logo" | "website" | "featured">[];
 };
 
 export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
@@ -29,13 +30,9 @@ export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
   );
 
   return (
-    <section ref={sectionRef} aria-labelledby="partners-heading" className="overflow-hidden bg-white py-16 sm:py-20">
+    <section ref={sectionRef} aria-labelledby="partners-heading" className="overflow-hidden bg-neutral-100 py-16 sm:py-20">
       <div className="site-container">
-        <m.div
-          initial={false}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.15 }}
-          transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
+        <ScrollReveal
           className="relative overflow-hidden rounded-[2.5rem] bg-primary-dark px-5 py-8 text-white shadow-[0_35px_100px_-55px_rgba(31,9,44,0.75)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
         >
           <div className="pointer-events-none absolute -right-40 -top-48 h-[480px] w-[480px] rounded-full border border-white/[0.06]" />
@@ -62,12 +59,6 @@ export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
                   "Institutions publiques et organisations professionnelles sélectionnées.",
                 )}
               </h2>
-              <p className="mt-5 max-w-2xl text-sm leading-7 text-white/60">
-                {t(
-                  "Long-term digital work for public bodies, professional chambers, educational institutions, and regional organizations across Morocco.",
-                  "Des collaborations numériques durables avec des organismes publics, des chambres professionnelles, des établissements d’enseignement et des organisations régionales au Maroc.",
-                )}
-              </p>
             </div>
 
             <div className="flex gap-3">
@@ -90,33 +81,13 @@ export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
             </div>
           </div>
 
-          <m.div
-            variants={{
-              hidden: {},
-              visible: {
-                transition: { staggerChildren: 0.07, delayChildren: 0.12 },
-              },
-            }}
-            initial={false}
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.18 }}
+          <div
             className="relative mt-8 grid auto-cols-[8.25rem] grid-flow-col gap-3 overflow-x-auto pb-3 sm:auto-cols-[9rem] lg:grid-flow-row lg:grid-cols-8 lg:auto-cols-auto lg:overflow-visible lg:pb-0"
           >
             <div className="pointer-events-none absolute left-[4%] right-[4%] top-1/2 hidden border-t border-dashed border-white/10 lg:block" />
 
             {featured.map((partner, index) => (
-              <m.div
-                key={partner.shortName}
-                variants={{
-                  hidden: { opacity: 0, y: 24, scale: 0.96 },
-                  visible: {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                    transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
-                  },
-                }}
-              >
+              <div key={partner.shortName}>
                 <m.div
                   animate={
                     animationsActive
@@ -167,20 +138,14 @@ export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
                     <span className="sr-only">{partner.name}</span>
                   </a>
                 </m.div>
-              </m.div>
+              </div>
             ))}
-          </m.div>
+          </div>
 
-          <div className="relative mt-6 flex flex-col gap-4 border-t border-white/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-xs leading-6 text-white/45">
-              {t(
-                "Verified institutional experience across economic, public, educational, and territorial sectors.",
-                "Une expérience institutionnelle vérifiée dans les secteurs économique, public, éducatif et territorial.",
-              )}
-            </p>
+          <div className="relative mt-6 flex justify-end border-t border-white/10 pt-5">
             <Link
               href="/references"
-              className="inline-flex items-center gap-2 self-start rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition-[transform,background-color,color] hover:-translate-y-0.5 hover:bg-accent hover:text-white"
+              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition-[transform,background-color,color] hover:-translate-y-0.5 hover:bg-accent hover:text-white"
             >
               {t(
                 `View all ${partners.length} websites`,
@@ -189,7 +154,7 @@ export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
               <ArrowRight size={16} aria-hidden="true" />
             </Link>
           </div>
-        </m.div>
+        </ScrollReveal>
       </div>
     </section>
   );

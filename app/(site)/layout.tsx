@@ -11,6 +11,18 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const locale = await getLocale();
   const services = getPublishedServices(locale);
   const projects = getPublishedProjects({ featuredOnly: true, limit: 3, locale });
+  const navigationServices = services.map(({ slug, title, description, icon }) => ({
+    slug,
+    title,
+    description,
+    icon,
+  }));
+  const navigationProjects = projects.map(({ slug, title, categoryLabel, image }) => ({
+    slug,
+    title,
+    categoryLabel,
+    image,
+  }));
 
   return (
     <LanguageProvider initialLocale={locale}>
@@ -22,7 +34,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           {translate(locale, "Skip to main content", "Aller au contenu principal")}
         </a>
         <SmoothScroll />
-        <Navbar services={services} projects={projects} />
+        <Navbar services={navigationServices} projects={navigationProjects} />
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>

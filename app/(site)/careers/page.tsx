@@ -60,7 +60,7 @@ export default async function CareersPage() {
         </div>
       </section>
 
-      <section className="bg-white py-24 sm:py-32">
+      <section className="bg-neutral-100 py-24 sm:py-32">
         <div className="mx-auto grid max-w-7xl gap-14 px-5 sm:px-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24 lg:px-10">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">

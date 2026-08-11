@@ -1,6 +1,6 @@
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import type { ProjectType } from "@/shared/content/projects";
+import type { ProjectType } from "@/shared/content/project-types";
 import { translate, type Locale } from "@/shared/i18n/config";
 
 type PortfolioPaginationProps = {

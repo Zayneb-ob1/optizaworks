@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   outputFileTracingRoot: process.cwd(),
   serverExternalPackages: ["better-sqlite3"],
+  images: {
+    formats: ["image/avif", "image/webp"],
+    qualities: [75, 76, 78, 82],
+    minimumCacheTTL: 86400,
+  },
   async headers() {
     return [
       {

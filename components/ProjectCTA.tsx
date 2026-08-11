@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
+import ScrollReveal from "@/components/ScrollReveal";
 
 function ClimbingRobot({ active }: { active: boolean }) {
   const loop = active ? Infinity : 0;
@@ -141,9 +142,9 @@ export default function ProjectCTA() {
   const active = inView && !reducedMotion;
 
   return (
-    <section ref={sectionRef} aria-labelledby="project-cta-heading" className="overflow-hidden bg-white py-20 sm:py-28">
+    <section ref={sectionRef} aria-labelledby="project-cta-heading" className="overflow-hidden bg-neutral-50 pb-16 pt-4 sm:pb-20 sm:pt-6">
       <div className="site-container">
-        <div className="relative isolate overflow-hidden rounded-4xl border border-primary/10 bg-neutral-100 px-6 py-14 text-center shadow-soft sm:px-12 sm:py-20">
+        <ScrollReveal className="relative isolate overflow-hidden px-6 py-14 text-center sm:px-12 sm:py-20">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 -z-10 opacity-80 [background-image:radial-gradient(circle_at_16%_20%,rgba(106,13,173,0.10),transparent_26%),radial-gradient(circle_at_84%_78%,rgba(59,130,246,0.11),transparent_27%)]"
@@ -163,7 +164,7 @@ export default function ProjectCTA() {
             )}
           </p>
 
-          <div className="mt-10 flex justify-center pt-14 sm:pt-16">
+          <div className="mt-6 flex justify-center pt-10 sm:pt-12">
             <m.div
               className="group relative"
               whileHover={reducedMotion ? undefined : { y: -2 }}
@@ -195,7 +196,7 @@ export default function ProjectCTA() {
               </Link>
             </m.div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

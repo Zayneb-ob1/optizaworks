@@ -1,8 +1,8 @@
 import { partners, type PartnerCategory } from "@/shared/content/partners";
+import type { ProjectType } from "@/shared/content/project-types";
 
-export const projectTypes = ["web", "software", "branding", "app"] as const;
-
-export type ProjectType = (typeof projectTypes)[number];
+export { projectTypes } from "@/shared/content/project-types";
+export type { ProjectType } from "@/shared/content/project-types";
 
 export type Project = {
   slug: string;

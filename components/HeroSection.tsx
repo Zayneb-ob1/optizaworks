@@ -1,385 +1,179 @@
-"use client";
-
-import {
-  m,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
-import {
-  ArrowRight,
-  BrainCircuit,
-  CloudCog,
-  Code2,
-  Cpu,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useLanguage } from "@/components/LanguageProvider";
-import AIDrone from "@/components/hero/AIDrone";
-import CosmicCanvas from "@/components/hero/CosmicCanvas";
-import MeteorLayer from "@/components/hero/MeteorLayer";
+import type { Locale } from "@/shared/i18n/config";
+import { translate } from "@/shared/i18n/config";
 
-const satellites = [
-  {
-    title: "Web Engineering",
-    titleFr: "Ingénierie web",
-    label: "Interface layer",
-    labelFr: "Couche interface",
-    icon: Code2,
-    position: "left-[2%] top-[16%]",
-    delay: 0,
-    tilt: -4,
-    accent: "cyan",
-  },
-  {
-    title: "AI & Data",
-    titleFr: "IA et données",
-    label: "Intelligence layer",
-    labelFr: "Couche intelligence",
-    icon: BrainCircuit,
-    position: "right-[14%] top-[19%]",
-    delay: 0.8,
-    tilt: 4,
-    accent: "blue",
-  },
-  {
-    title: "Cloud Systems",
-    titleFr: "Systèmes cloud",
-    label: "Infrastructure layer",
-    labelFr: "Couche infrastructure",
-    icon: CloudCog,
-    position: "bottom-[17%] right-[13%]",
-    delay: 1.5,
-    tilt: 3,
-    accent: "violet",
-  },
-  {
-    title: "Cybersecurity",
-    titleFr: "Cybersécurité",
-    label: "Protection layer",
-    labelFr: "Couche protection",
-    icon: ShieldCheck,
-    position: "bottom-[15%] left-[4%]",
-    delay: 2.1,
-    tilt: -3,
-    accent: "purple",
-  },
-] as const;
-
-const accentClasses = {
-  cyan: "border-cyan-300/20 text-cyan-200 group-hover:border-cyan-200/45",
-  blue: "border-blue-300/20 text-blue-200 group-hover:border-blue-200/45",
-  violet: "border-violet-300/20 text-violet-200 group-hover:border-violet-200/45",
-  purple: "border-fuchsia-300/20 text-fuchsia-200 group-hover:border-fuchsia-200/45",
+type HeroSectionProps = {
+  backdrop: React.ReactNode;
+  locale: Locale;
 };
 
-function SatelliteCard({
-  item,
-  x,
-  y,
-  reducedMotion,
-}: {
-  item: (typeof satellites)[number];
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-  reducedMotion: boolean;
-}) {
-  const { t } = useLanguage();
-  const Icon = item.icon;
-  return (
-    <m.div
-      style={{ x, y }}
-      className={`absolute z-40 hidden w-40 will-change-transform sm:block lg:w-44 ${item.position}`}
-    >
-      <m.article
-        animate={
-          reducedMotion
-            ? undefined
-            : {
-                y: [0, -9, 0],
-                rotate: [item.tilt, item.tilt * 0.45, item.tilt],
-              }
-        }
-        transition={{ duration: 5.6 + item.delay, delay: item.delay, repeat: Infinity, ease: "easeInOut" }}
-        whileHover={reducedMotion ? undefined : { scale: 1.035, y: -5 }}
-        className={`group pointer-events-auto relative overflow-hidden rounded-2xl border bg-[#080d1c]/88 p-3.5 shadow-[0_18px_50px_-26px_rgba(0,0,0,0.9)] transition-colors duration-300 lg:p-4 ${accentClasses[item.accent]}`}
-      >
-        <span className="absolute right-2 top-2 h-1 w-1 rounded-full bg-current opacity-80" />
-        <div className="flex items-start justify-between gap-3">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-current/20 bg-current/[0.07]">
-            <Icon size={16} strokeWidth={1.6} />
-          </span>
-          <span className="font-mono text-[7px] uppercase tracking-[0.15em] text-slate-600">
-            {t("orbit node", "nœud orbital")}
-          </span>
-        </div>
-        <h3 className="mt-4 text-xs font-semibold text-white lg:text-sm">
-          {t(item.title, item.titleFr)}
-        </h3>
-        <p className="mt-1 font-mono text-[7px] uppercase tracking-[0.12em] text-slate-500 lg:text-[8px]">
-          {t(item.label, item.labelFr)}
-        </p>
-        <div className="mt-3 flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          <span className="font-mono text-[7px] uppercase tracking-[0.12em] text-slate-500">
-            {t("online", "en ligne")}
-          </span>
-          <span className="h-px flex-1 bg-gradient-to-r from-current/30 to-transparent" />
-        </div>
-      </m.article>
-    </m.div>
-  );
-}
+function HeroDevice({ locale }: { locale: Locale }) {
+  const t = (english: string, french: string) =>
+    translate(locale, english, french);
 
-function PortalSymbol({ reducedMotion }: { reducedMotion: boolean }) {
   return (
-    <div className="absolute left-1/2 top-1/2 z-20 h-[22%] w-[22%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true">
-      <m.div
-        animate={reducedMotion ? undefined : { rotate: 360 }}
-        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-0 rounded-full border border-cyan-100/70 border-r-transparent shadow-[0_0_14px_rgba(125,211,252,0.32)]"
-      />
-      <m.div
-        animate={reducedMotion ? undefined : { rotate: -360 }}
-        transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-        className="absolute inset-[18%] rounded-full border border-fuchsia-100/70 border-b-transparent"
-      />
-      <div className="absolute inset-[36%] rounded-full border border-white/80 bg-white/[0.08] shadow-[0_0_18px_rgba(255,255,255,0.38)]" />
-      <span className="absolute -left-[2%] top-1/2 h-[17%] w-[17%] -translate-y-1/2 rounded-sm border border-cyan-100/70 bg-[#090b1b]" />
-      <span className="absolute -right-[2%] top-1/2 h-[17%] w-[17%] -translate-y-1/2 rounded-sm border border-fuchsia-100/70 bg-[#090b1b]" />
+    <div className="hero-device-enter relative mx-auto aspect-[3/2] w-[min(41rem,98vw)] lg:mx-0 lg:w-[min(52vw,48rem)]" aria-hidden="true">
+      <div className="hero-device-float relative h-full w-full">
+        <div className="pointer-events-none absolute left-[22.5%] top-[10.5%] h-[49%] w-[49%] rounded-[5%] bg-primary-dark/15 shadow-[0_28px_58px_-22px_rgba(31,9,44,0.55)]" />
+        <Image
+          src="/hero/hand-pc.webp"
+          alt=""
+          fill
+          priority
+          fetchPriority="high"
+          quality={82}
+          sizes="(max-width: 767px) 98vw, (max-width: 1279px) 66vw, 768px"
+          className="pointer-events-none select-none object-contain"
+        />
+
+        <div className="absolute left-[24%] top-[11.9%] h-[45.5%] w-[46.3%] overflow-hidden rounded-[2.8%] bg-[#050207] ring-1 ring-white/[0.06]">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_22%,rgba(106,13,173,0.30),transparent_42%),linear-gradient(135deg,#050207,#0d0512)]" />
+          <div className="absolute inset-0 opacity-[0.14] [background-image:radial-gradient(circle,rgba(255,255,255,0.55)_0.45px,transparent_0.6px)] [background-size:13px_13px]" />
+
+          <div className="hero-screen-cosmos pointer-events-none absolute right-[6%] top-[18%] z-10 w-[22%]">
+            <svg viewBox="0 0 96 76" className="h-auto w-full overflow-visible" fill="none">
+              <defs>
+                <radialGradient id="hero-screen-earth" cx="0" cy="0" r="1" gradientTransform="translate(43 30) rotate(48) scale(35)">
+                  <stop stopColor="#7dd3fc" />
+                  <stop offset="0.46" stopColor="#6A0DAD" />
+                  <stop offset="1" stopColor="#1F092C" />
+                </radialGradient>
+              </defs>
+
+              <circle cx="12" cy="15" r="1.4" fill="#ffffff" opacity="0.8" />
+              <circle cx="82" cy="12" r="1" fill="#7dd3fc" opacity="0.9" />
+              <circle cx="88" cy="47" r="1.5" fill="#b878df" opacity="0.8" />
+              <circle cx="18" cy="62" r="1" fill="#7dd3fc" opacity="0.75" />
+              <circle cx="72" cy="67" r="0.8" fill="#ffffff" opacity="0.7" />
+              <path d="M26 8 V13 M23.5 10.5 H28.5" stroke="#b878df" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M79 27 V31 M77 29 H81" stroke="#ffffff" strokeWidth="0.9" strokeLinecap="round" opacity="0.75" />
+
+              <ellipse cx="50" cy="40" rx="32" ry="9" stroke="#7dd3fc" strokeWidth="1" opacity="0.3" transform="rotate(-12 50 40)" />
+              <circle cx="50" cy="40" r="21" fill="url(#hero-screen-earth)" stroke="#b878df" strokeWidth="1.4" />
+              <ellipse cx="50" cy="40" rx="9" ry="20" stroke="#ffffff" strokeWidth="0.8" opacity="0.2" />
+              <path d="M30 39 H70 M34 30 C43 34 57 34 66 30 M34 50 C43 46 57 46 66 50" stroke="#ffffff" strokeWidth="0.75" opacity="0.18" />
+              <path d="M38 25 L45 23 L49 28 L47 33 L41 34 L38 30 Z" fill="#c89ae5" opacity="0.72" />
+              <path d="M54 35 L62 33 L67 38 L63 42 L65 48 L58 55 L53 50 L55 44 L51 40 Z" fill="#9f67c8" opacity="0.78" />
+              <path d="M34 43 L40 40 L45 44 L43 50 L37 52 L33 48 Z" fill="#67e8f9" opacity="0.48" />
+              <path d="M37 25 C31 34 32 48 40 56" stroke="#ffffff" strokeWidth="1.2" strokeLinecap="round" opacity="0.28" />
+            </svg>
+          </div>
+
+          <div className="relative flex h-full flex-col px-[5%] py-[4.5%]">
+            <div className="flex items-center justify-between">
+              <div className="relative h-[clamp(8px,1.05vw,15px)] w-[clamp(38px,5.2vw,75px)] overflow-hidden">
+                <Image
+                  src="/logo-removebg-preview.png"
+                  alt=""
+                  fill
+                  sizes="75px"
+                  quality={75}
+                  className="object-contain object-left brightness-0 invert"
+                />
+              </div>
+              <div className="flex items-center gap-[clamp(4px,0.6vw,9px)]">
+                <span className="h-px w-[clamp(8px,1.3vw,18px)] bg-white/25" />
+                <span className="h-px w-[clamp(8px,1.3vw,18px)] bg-white/25" />
+                <span className="h-px w-[clamp(8px,1.3vw,18px)] bg-white/25" />
+                <span className="rounded-full bg-accent px-[clamp(3px,0.45vw,7px)] py-[clamp(1px,0.18vw,3px)] text-[clamp(2px,0.25vw,4px)] font-semibold text-white">
+                  {t("Contact", "Contact")}
+                </span>
+              </div>
+            </div>
+
+            <div className="my-auto max-w-[68%] text-left">
+              <span className="block text-[clamp(2px,0.28vw,4px)] font-semibold uppercase tracking-[0.16em] text-white/45">
+                {t("Digital engineering", "Ingénierie numérique")}
+              </span>
+              <span className="mt-[clamp(4px,0.65vw,10px)] block text-[clamp(7px,0.95vw,14px)] font-semibold leading-[1.04] tracking-[-0.04em] text-white">
+                {t("Make your idea", "Donnez vie à votre idée")} {" "}
+                <span className="text-[#b878df]">{t("with us.", "avec nous.")}</span>
+              </span>
+              <span className="mt-[clamp(3px,0.45vw,7px)] block text-[clamp(2px,0.26vw,4px)] leading-relaxed text-white/38">
+                {t(
+                  "Secure websites, software and infrastructure.",
+                  "Sites, logiciels et infrastructures sécurisés.",
+                )}
+              </span>
+              <span className="mt-[clamp(4px,0.7vw,10px)] inline-flex rounded-full bg-accent px-[clamp(4px,0.65vw,10px)] py-[clamp(2px,0.28vw,4px)] text-[clamp(2px,0.27vw,4px)] font-semibold text-white">
+                {t("Explore our work", "Nos réalisations")}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="h-px w-[18%] bg-accent/70" />
+              <span className="text-[clamp(2px,0.22vw,3px)] uppercase tracking-[0.16em] text-white/25">
+                OptizaWorks
+              </span>
+            </div>
+          </div>
+          <span className="pointer-events-none absolute inset-0 bg-[linear-gradient(118deg,transparent_18%,rgba(255,255,255,0.10)_37%,transparent_56%)] opacity-70" />
+        </div>
+      </div>
     </div>
   );
 }
 
-export default function HeroSection() {
-  const { t } = useLanguage();
-  const sectionRef = useRef<HTMLElement>(null);
-  const portalRef = useRef<HTMLDivElement>(null);
-  const pointerRef = useRef({ x: 0, y: 0 });
-  const reduceMotionPreference = useReducedMotion();
-  const reducedMotion = Boolean(reduceMotionPreference);
-  const [visible, setVisible] = useState(true);
-  const [mobile, setMobile] = useState(false);
-
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
-  const smoothX = useSpring(pointerX, { stiffness: 70, damping: 26, mass: 0.8 });
-  const smoothY = useSpring(pointerY, { stiffness: 70, damping: 26, mass: 0.8 });
-  const contentX = useTransform(smoothX, [-1, 1], [-4, 4]);
-  const contentY = useTransform(smoothY, [-1, 1], [-3, 3]);
-  const portalX = useTransform(smoothX, [-1, 1], [-15, 15]);
-  const portalY = useTransform(smoothY, [-1, 1], [-10, 10]);
-  const cardX = useTransform(smoothX, [-1, 1], [7, -7]);
-  const cardY = useTransform(smoothY, [-1, 1], [5, -5]);
-  const droneX = useTransform(smoothX, [-1, 1], [-8, 8]);
-  const droneY = useTransform(smoothY, [-1, 1], [-5, 5]);
-
-  useEffect(() => {
-    const media = window.matchMedia("(max-width: 767px)");
-    const updateMobile = () => setMobile(media.matches);
-    updateMobile();
-    media.addEventListener("change", updateMobile);
-
-    const section = sectionRef.current;
-    const observer = section
-      ? new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { rootMargin: "120px 0px", threshold: 0.01 })
-      : null;
-    if (section) observer?.observe(section);
-
-    return () => {
-      media.removeEventListener("change", updateMobile);
-      observer?.disconnect();
-    };
-  }, []);
-
-  function handlePointerMove(event: React.PointerEvent<HTMLElement>) {
-    if (reducedMotion || mobile || !sectionRef.current) return;
-    const bounds = sectionRef.current.getBoundingClientRect();
-    const nextX = ((event.clientX - bounds.left) / bounds.width) * 2 - 1;
-    const nextY = ((event.clientY - bounds.top) / bounds.height) * 2 - 1;
-    pointerRef.current.x = nextX;
-    pointerRef.current.y = nextY;
-    pointerX.set(nextX);
-    pointerY.set(nextY);
-  }
-
-  function resetPointer() {
-    pointerRef.current.x = 0;
-    pointerRef.current.y = 0;
-    pointerX.set(0);
-    pointerY.set(0);
-  }
+export default function HeroSection({ backdrop, locale }: HeroSectionProps) {
+  const t = (english: string, french: string) =>
+    translate(locale, english, french);
 
   return (
-    <section
-      ref={sectionRef}
-      onPointerMove={handlePointerMove}
-      onPointerLeave={resetPointer}
-      className="relative isolate min-h-[980px] overflow-hidden bg-[#03040b] text-white sm:min-h-[920px] lg:min-h-[860px]"
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(circle at 69% 48%, rgba(43,76,190,0.18), transparent 29%), radial-gradient(circle at 77% 39%, rgba(126,34,206,0.18), transparent 23%), radial-gradient(circle at 14% 78%, rgba(8,145,178,0.08), transparent 25%), linear-gradient(122deg,#03040b 0%,#060719 52%,#070414 100%)",
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.08]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(125,211,252,.2) 1px, transparent 1px), linear-gradient(90deg, rgba(125,211,252,.2) 1px, transparent 1px)",
-          backgroundSize: "58px 58px",
-          maskImage: "radial-gradient(circle at 66% 55%, black, transparent 76%)",
-        }}
-      />
+    <section className="relative isolate min-h-[720px] overflow-hidden bg-[#03040b] text-white sm:min-h-[840px] lg:min-h-[620px] xl:min-h-[640px]">
+      <div className="relative min-h-[720px] w-full overflow-hidden bg-[#03040b] sm:min-h-[840px] lg:min-h-[620px] xl:min-h-[640px]">
+        {backdrop}
 
-      <CosmicCanvas
-        active={visible}
-        mobile={mobile}
-        reducedMotion={reducedMotion}
-        pointerRef={pointerRef}
-        portalRef={portalRef}
-      />
-      <MeteorLayer active={visible} mobile={mobile} reducedMotion={reducedMotion} />
+        <div
+          aria-hidden="true"
+          className="hero-ambient-glow pointer-events-none absolute -right-[12%] -top-[28%] h-[72%] w-[78%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(184,120,223,0.18)_0%,rgba(106,13,173,0.18)_31%,rgba(50,16,68,0.07)_52%,transparent_72%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-[28%] -left-[18%] h-[58%] w-[55%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(106,13,173,0.18),rgba(50,16,68,0.08)_42%,transparent_72%)]"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-[0.11] [background-image:radial-gradient(circle,rgba(255,255,255,0.42)_0.7px,transparent_0.8px)] [background-size:30px_30px] [mask-image:linear-gradient(to_bottom,transparent,black_22%,black_82%,transparent)]"
+        />
 
-      <div
-        ref={portalRef}
-        className="pointer-events-none absolute bottom-[-2rem] left-1/2 z-10 aspect-square w-[41rem] -translate-x-1/2 sm:bottom-[-8rem] sm:w-[49rem] lg:bottom-auto lg:left-auto lg:right-[-7rem] lg:top-1/2 lg:w-[64vw] lg:max-w-[900px] lg:translate-x-0 lg:-translate-y-1/2 xl:right-[-4rem]"
-      >
-        <m.div style={reducedMotion ? undefined : { x: portalX, y: portalY }} className="relative h-full w-full will-change-transform">
-          <div className="absolute inset-[2%] rounded-full bg-[radial-gradient(circle,rgba(75,46,202,0.16)_0%,rgba(76,29,149,0.1)_38%,transparent_69%)]" aria-hidden="true" />
-          <m.div
-            animate={reducedMotion || !visible ? undefined : { scale: [0.94, 1.08, 0.94], opacity: [0.18, 0.42, 0.18] }}
-            transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-[14%] rounded-full border border-blue-400/15 bg-blue-500/[0.04] will-change-transform"
-            aria-hidden="true"
-          />
-
-          <div className="absolute inset-[4%] rounded-full opacity-75" style={{ background: "conic-gradient(from 20deg, transparent 0 7%, rgba(96,165,250,.3) 9%, transparent 13% 21%, rgba(217,70,239,.26) 25%, transparent 29% 54%, rgba(34,211,238,.22) 58%, transparent 62% 82%, rgba(139,92,246,.28) 86%, transparent 91%)", maskImage: "radial-gradient(circle, transparent 67%, black 68%, black 70%, transparent 71%)" }} aria-hidden="true" />
-
-          {Array.from({ length: 16 }, (_, index) => (
-            <m.span
-              key={index}
-              animate={reducedMotion || !visible ? undefined : { opacity: [0.08, 0.44, 0.08], scaleX: [0.75, 1.08, 0.75] }}
-              transition={{ duration: 4.2 + (index % 5) * 0.7, delay: index * 0.12, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute left-1/2 top-1/2 h-px w-[47%] origin-left bg-gradient-to-r from-blue-300/25 via-fuchsia-400/10 to-transparent"
-              style={{ rotate: `${index * 22.5}deg` }}
-              aria-hidden="true"
-            />
-          ))}
-
-          <m.div
-            animate={reducedMotion || !visible ? undefined : { rotate: 360 }}
-            transition={{ duration: 42, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-[12%] rounded-full border border-dashed border-blue-200/15 will-change-transform"
-            aria-hidden="true"
-          >
-            <span className="absolute left-1/2 top-[-4px] h-2 w-2 -translate-x-1/2 rounded-full bg-cyan-100 shadow-[0_0_10px_rgba(165,243,252,0.85)]" />
-            <span className="absolute bottom-[7%] right-[15%] h-1.5 w-1.5 rounded-full bg-fuchsia-200" />
-          </m.div>
-          <m.div
-            animate={reducedMotion || !visible ? undefined : { rotate: -360 }}
-            transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-[20%] rounded-full border border-blue-300/20 border-l-fuchsia-300/40 border-t-cyan-200/40 will-change-transform"
-            aria-hidden="true"
-          />
-          <m.div
-            animate={reducedMotion || !visible ? undefined : { rotate: 360 }}
-            transition={{ duration: 19, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-[27%] rounded-full border border-violet-300/25 border-b-transparent border-r-cyan-200/45 will-change-transform"
-            aria-hidden="true"
-          />
-          <div className="absolute inset-[31%] rounded-full border border-white/10 bg-[radial-gradient(circle_at_50%_45%,rgba(121,80,242,0.4),rgba(28,24,83,0.42)_37%,rgba(3,4,11,0.94)_72%)] shadow-[inset_0_0_34px_rgba(96,165,250,0.18)]" aria-hidden="true" />
-          <m.div
-            animate={reducedMotion || !visible ? undefined : { scale: [0.92, 1.06, 0.92], opacity: [0.5, 0.9, 0.5] }}
-            transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-[38%] rounded-full bg-[radial-gradient(circle,rgba(255,255,255,0.35),rgba(96,70,220,0.25)_28%,rgba(18,12,58,0.1)_70%)] will-change-transform"
-            aria-hidden="true"
-          />
-          <PortalSymbol reducedMotion={reducedMotion} />
-
-          {satellites.map((item) => (
-            <SatelliteCard key={item.title} item={item} x={cardX} y={cardY} reducedMotion={reducedMotion || !visible} />
-          ))}
-
-          <div className="absolute left-[28%] top-[24%] z-30 flex h-10 w-10 items-center justify-center rounded-xl border border-cyan-200/20 bg-[#080d1c]/90 text-cyan-200 sm:hidden" aria-hidden="true"><Code2 size={16} /></div>
-          <div className="absolute right-[28%] top-[24%] z-30 flex h-10 w-10 items-center justify-center rounded-xl border border-fuchsia-200/20 bg-[#080d1c]/90 text-fuchsia-200 sm:hidden" aria-hidden="true"><ShieldCheck size={16} /></div>
-
-          <AIDrone active={visible} mobile={mobile} reducedMotion={reducedMotion} x={droneX} y={droneY} />
-        </m.div>
-      </div>
-
-      <div className="relative z-30 mx-auto grid min-h-[980px] max-w-7xl items-start px-5 pb-[470px] pt-36 sm:min-h-[920px] sm:px-8 sm:pb-[430px] sm:pt-40 lg:min-h-[860px] lg:grid-cols-[0.83fr_1.17fr] lg:items-center lg:px-10 lg:pb-28 lg:pt-32">
-        <m.div
-          style={reducedMotion ? undefined : { x: contentX, y: contentY }}
-          className="relative max-w-2xl will-change-transform"
-        >
-          <div>
-          <div className="mb-7 flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-2 rounded-full border border-cyan-200/15 bg-cyan-200/[0.04] px-3 py-2 text-[9px] font-semibold uppercase tracking-[0.21em] text-cyan-100/70">
-              <Sparkles size={12} />
-              {t("Sovereign digital engineering", "Ingénierie numérique souveraine")}
-            </span>
-            <span className="flex items-center gap-2 font-mono text-[8px] uppercase tracking-[0.16em] text-slate-600">
-              <span className="relative flex h-1.5 w-1.5">
-                {!reducedMotion && <span className="absolute h-full w-full animate-ping rounded-full bg-emerald-300 opacity-50" />}
-                <span className="relative h-1.5 w-1.5 rounded-full bg-emerald-300" />
+        <div className="relative z-10 mx-auto grid min-h-[720px] max-w-7xl grid-rows-[auto_1fr] items-start px-5 pb-20 pt-24 sm:min-h-[840px] sm:px-8 sm:pb-20 sm:pt-28 lg:min-h-[620px] lg:grid-cols-[0.88fr_1.12fr] lg:grid-rows-1 lg:px-10 lg:pb-16 lg:pt-24 xl:min-h-[640px]">
+          <div className="relative z-20 max-w-2xl text-center lg:self-center lg:text-left">
+            <h1 className="text-[2.65rem] font-semibold leading-[0.98] tracking-[-0.055em] text-white sm:text-[4.1rem] lg:text-[4.45rem] xl:text-[4.8rem]">
+              {t("Engineering at the edge of", "L’ingénierie aux frontières du")} {" "}
+              <span className="bg-gradient-to-r from-white via-[#cbb5dc] to-[#8f52bd] bg-clip-text text-transparent">
+                {t("possible.", "possible.")}
               </span>
-              {t("Network online", "Réseau opérationnel")}
-            </span>
-          </div>
+            </h1>
 
-          <h1 className="max-w-[760px] text-[2.9rem] font-semibold leading-[0.97] tracking-[-0.055em] text-white sm:text-[4.3rem] lg:text-[4.65rem] xl:text-[5.2rem]">
-            {t("Engineering at the edge of", "L’ingénierie aux frontières du")}{" "}
-            <span className="bg-gradient-to-r from-cyan-200 via-blue-400 to-fuchsia-400 bg-clip-text text-transparent">
-              {t("possible.", "possible.")}
-            </span>
-          </h1>
-          <p className="mt-7 max-w-xl text-sm leading-7 text-slate-400 sm:text-base sm:leading-8">
-            {t(
-              "OptizaWorks builds secure websites, software, AI systems, and digital infrastructure that give ambitious organizations their own technological gravity.",
-              "OptizaWorks conçoit des sites web, des logiciels, des systèmes d’IA et des infrastructures numériques sécurisés qui donnent aux organisations ambitieuses leur propre force technologique.",
-            )}
-          </p>
+            <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-white/50 sm:text-[15px] sm:leading-7 lg:mx-0">
+              {t(
+                "OptizaWorks builds secure websites, software, AI systems, and digital infrastructure that give ambitious organizations their own technological gravity.",
+                "OptizaWorks conçoit des sites web, des logiciels, des systèmes d’IA et des infrastructures numériques sécurisés qui donnent aux organisations ambitieuses leur propre force technologique.",
+              )}
+            </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-5">
-            <Link
-              href="/portfolio"
-              className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-3.5 text-sm font-semibold text-white shadow-[0_14px_35px_-18px_rgba(96,165,250,0.65)] transition-transform duration-300 hover:-translate-y-0.5"
-            >
-              {t("Explore our work", "Découvrir nos réalisations")}
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/12 transition-transform group-hover:translate-x-0.5"><ArrowRight size={14} /></span>
-            </Link>
-            <div className="flex items-center gap-3 text-slate-600">
-              <Cpu size={16} className="text-cyan-300/55" />
-              <span className="font-mono text-[8px] uppercase leading-5 tracking-[0.14em]">
+            <div className="mt-8 flex flex-col items-center gap-4 lg:items-start">
+              <Link
+                href="/portfolio"
+                className="group inline-flex items-center gap-3 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_34px_-18px_rgba(106,13,173,0.9)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#7d20ba]"
+              >
+                {t("Explore our work", "Découvrir nos réalisations")}
+                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+              </Link>
+              <span className="font-mono text-[8px] uppercase leading-5 tracking-[0.14em] text-white/35">
                 {t("Strategy / Design", "Stratégie / Design")}
-                <br />
+                <span className="mx-2 text-white/15">•</span>
                 {t("Engineering / Infrastructure", "Ingénierie / Infrastructure")}
               </span>
             </div>
           </div>
 
-          <div className="mt-10 flex max-w-lg items-center gap-4 border-t border-white/[0.07] pt-5 font-mono text-[8px] uppercase tracking-[0.15em] text-slate-600 sm:gap-6">
-            <span>{t("08 capabilities", "08 expertises")}</span><span className="h-1 w-1 rounded-full bg-blue-400/60" /><span>{t("01 integrated team", "01 équipe intégrée")}</span><span className="hidden h-px flex-1 bg-gradient-to-r from-white/10 to-transparent sm:block" />
+          <div className="relative z-10 -mx-3 -mb-20 -mt-10 self-end sm:-mx-6 sm:-mb-20 sm:-mt-14 lg:-mb-16 lg:-ml-12 lg:-mr-16 lg:mt-0 lg:self-end xl:-mr-20">
+            <HeroDevice locale={locale} />
           </div>
-          </div>
-        </m.div>
-        <div aria-hidden="true" />
-      </div>
-
-      <div className="pointer-events-none absolute bottom-5 left-1/2 z-40 hidden -translate-x-1/2 items-center gap-3 font-mono text-[8px] uppercase tracking-[0.2em] text-slate-700 sm:flex">
-        <span className="h-px w-10 bg-gradient-to-r from-transparent to-blue-400/30" />
-        {t("Enter the system", "Entrez dans le système")}
-        <span className="h-px w-10 bg-gradient-to-l from-transparent to-fuchsia-400/30" />
+        </div>
       </div>
     </section>
   );

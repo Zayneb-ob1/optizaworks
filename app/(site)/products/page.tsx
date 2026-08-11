@@ -68,7 +68,7 @@ export default async function ProductsPage() {
         </div>
       </section>
 
-      <section className="bg-white py-24 sm:py-32">
+      <section className="bg-neutral-50 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
@@ -82,7 +82,7 @@ export default async function ProductsPage() {
             {products.map((product) => (
               <article
                 key={product.code}
-                className="flex flex-col rounded-3xl border border-primary/10 bg-neutral-50 p-7 sm:p-8"
+                className="flex flex-col rounded-3xl border border-primary/10 bg-white p-7 sm:p-8"
               >
                 <div className="flex items-center justify-between">
                   <span className="flex h-12 min-w-12 items-center justify-center rounded-2xl bg-primary px-3 text-xs font-bold tracking-[0.12em] text-white">

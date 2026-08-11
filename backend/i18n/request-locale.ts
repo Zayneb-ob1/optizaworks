@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cookies } from "next/headers";
+import { cache } from "react";
 import {
   defaultLocale,
   isLocale,
@@ -8,7 +9,7 @@ import {
   type Locale,
 } from "@/shared/i18n/config";
 
-export async function getLocale(): Promise<Locale> {
+export const getLocale = cache(async (): Promise<Locale> => {
   const value = (await cookies()).get(localeCookieName)?.value;
   return isLocale(value) ? value : defaultLocale;
-}
+});
