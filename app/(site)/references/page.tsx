@@ -3,8 +3,36 @@ import { ArrowUpRight, Building2, Network } from "lucide-react";
 import Image from "next/image";
 import { getPublishedOrganizations } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
+import type { PartnerCategory } from "@/shared/content/partners";
 import { translate } from "@/shared/i18n/config";
 import { createPublicPageMetadata } from "@/shared/seo/site";
+
+const referenceGroups: Array<{
+  category: PartnerCategory;
+  english: string;
+  french: string;
+}> = [
+  {
+    category: "Local government & justice",
+    english: "Local government & justice",
+    french: "Collectivités territoriales et justice",
+  },
+  {
+    category: "Education & training",
+    english: "Education & training",
+    french: "Enseignement et formation",
+  },
+  {
+    category: "Public institutions & agencies",
+    english: "Public institutions & agencies",
+    french: "Institutions publiques et agences",
+  },
+  {
+    category: "Economic chambers & agencies",
+    english: "Economic chambers & agencies",
+    french: "Chambres économiques et agences",
+  },
+];
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -117,41 +145,74 @@ export default async function ReferencesPage() {
             </p>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4">
-            {organizations.map((organization) => (
-              <a
-                key={organization.shortName}
-                href={organization.website}
-                target="_blank"
-                rel="noreferrer"
-                title={organization.name}
-                aria-label={t(
-                  `Visit ${organization.name} official website`,
-                  `Visiter le site officiel de ${organization.name}`,
-                )}
-                className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl border border-primary/10 bg-white p-5 shadow-[0_18px_45px_-35px_rgba(50,16,68,0.35)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_24px_55px_-32px_rgba(106,13,173,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 sm:p-7"
-              >
-                <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100" />
-                <span className="relative h-full w-full">
-                  <Image
-                    src={organization.logo}
-                    alt={t(
-                      `${organization.name} logo`,
-                      `Logo de ${organization.name}`,
-                    )}
-                    fill
-                    loading="lazy"
-                    quality={82}
-                    sizes="(max-width: 640px) calc(50vw - 28px), (max-width: 1024px) calc(33vw - 28px), 270px"
-                    className="object-contain transition-transform duration-300 group-hover:scale-[1.04]"
-                  />
-                </span>
-                <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-sm transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100 sm:right-4 sm:top-4">
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </span>
-                <span className="sr-only">{organization.name}</span>
-              </a>
-            ))}
+          <div className="mt-12 space-y-14 sm:space-y-16">
+            {referenceGroups.map((group, groupIndex) => {
+              const groupOrganizations = organizations.filter(
+                (organization) => organization.category === group.category,
+              );
+
+              if (groupOrganizations.length === 0) return null;
+
+              const headingId = `reference-group-${groupIndex + 1}`;
+
+              return (
+                <section key={group.category} aria-labelledby={headingId}>
+                  <div className="flex items-end justify-between gap-6 border-b border-primary/10 pb-5">
+                    <div className="flex items-center gap-4">
+                      <span className="font-mono text-[10px] font-semibold tracking-[0.18em] text-accent">
+                        {String(groupIndex + 1).padStart(2, "0")}
+                      </span>
+                      <h3
+                        id={headingId}
+                        className="text-xl font-semibold tracking-[-0.025em] text-primary sm:text-2xl"
+                      >
+                        {t(group.english, group.french)}
+                      </h3>
+                    </div>
+                    <span className="shrink-0 text-xs font-medium text-neutral-500">
+                      {groupOrganizations.length} {t("organizations", "organisations")}
+                    </span>
+                  </div>
+
+                  <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-5">
+                    {groupOrganizations.map((organization) => (
+                      <a
+                        key={organization.shortName}
+                        href={organization.website}
+                        target="_blank"
+                        rel="noreferrer"
+                        title={organization.name}
+                        aria-label={t(
+                          `Visit ${organization.name} official website`,
+                          `Visiter le site officiel de ${organization.name}`,
+                        )}
+                        className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl border border-primary/10 bg-white p-5 shadow-[0_18px_45px_-35px_rgba(50,16,68,0.35)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_24px_55px_-32px_rgba(106,13,173,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 sm:p-6"
+                      >
+                        <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100" />
+                        <span className="relative h-full w-full">
+                          <Image
+                            src={organization.logo}
+                            alt={t(
+                              `${organization.name} logo`,
+                              `Logo de ${organization.name}`,
+                            )}
+                            fill
+                            loading="lazy"
+                            quality={82}
+                            sizes="(max-width: 640px) calc(50vw - 28px), (max-width: 1024px) calc(33vw - 28px), 220px"
+                            className="object-contain transition-transform duration-300 group-hover:scale-[1.04]"
+                          />
+                        </span>
+                        <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-sm transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100">
+                          <ArrowUpRight size={14} aria-hidden="true" />
+                        </span>
+                        <span className="sr-only">{organization.name}</span>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              );
+            })}
           </div>
 
           {organizations.length === 0 && (

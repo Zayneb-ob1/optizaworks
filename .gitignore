@@ -13,6 +13,8 @@
 # local
 .DS_Store
 *.pem
+/tmp/
+/.chrome-*/
 /data/*.db
 /data/*.db-shm
 /data/*.db-wal
@@ -26,6 +28,7 @@ yarn-error.log*
 
 # env
 .env*
+!.env.example
 
 # typescript
 *.tsbuildinfo

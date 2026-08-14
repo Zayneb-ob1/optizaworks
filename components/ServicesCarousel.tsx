@@ -71,11 +71,11 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
   return (
     <div
       ref={carouselRef}
-      className="relative mt-8 px-5 py-2 text-primary sm:mt-10 sm:px-8 sm:py-4 lg:px-8"
+      className="relative mt-8 px-0 py-2 text-primary sm:mt-10 sm:px-4 sm:py-4 lg:px-0"
     >
-      <div className="relative grid items-center gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-14">
-        <div className="relative mx-auto w-full max-w-[430px]">
-          <div className="relative mx-auto aspect-square w-[300px] sm:w-[370px]">
+      <div className="relative grid items-center gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-12">
+        <div className="relative mx-auto w-full max-w-[470px]">
+          <div className="relative mx-auto aspect-square w-full max-w-[330px] sm:max-w-[400px] lg:max-w-[430px]">
             <div className="absolute inset-[10%] rounded-full border-2 border-primary/55" />
             <div className="absolute inset-[25%] rounded-full border border-dashed border-primary/25" />
             <div className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/45" />
@@ -86,7 +86,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                 onClick={previous}
                 disabled={serviceCount < 2}
                 aria-label={t("Previous service", "Service précédent")}
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-white text-primary shadow-sm transition-[transform,background-color,border-color,color] hover:-translate-y-0.5 hover:border-primary/40 hover:bg-primary hover:text-white focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-white text-primary shadow-sm transition-[transform,background-color,border-color,color] hover:-translate-x-0.5 hover:border-primary/40 hover:bg-primary hover:text-white focus-visible:outline-primary disabled:pointer-events-none disabled:opacity-40 motion-reduce:transition-none"
               >
                 <ArrowLeft size={15} aria-hidden="true" />
               </button>
@@ -103,7 +103,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
 
             <m.div
               initial={false}
-              className="absolute inset-0 z-10 will-change-transform motion-reduce:will-change-auto"
+              className="absolute inset-0 z-10"
               animate={{ rotate: orbitRotation }}
               transition={orbitTransition}
             >
@@ -122,7 +122,6 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                   >
                     <m.div
                       initial={false}
-                      className="will-change-transform motion-reduce:will-change-auto"
                       animate={{ rotate: -orbitRotation }}
                       transition={orbitTransition}
                     >
@@ -138,25 +137,25 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                           active
                             ? `flex flex-col items-center justify-center gap-2 rounded-2xl border-primary bg-primary px-2 text-white shadow-[0_16px_35px_-14px_rgba(31,9,44,0.58)] ${
                                 compactOrbit
-                                  ? "h-[80px] w-[96px] sm:h-[92px] sm:w-[108px]"
-                                  : "h-[92px] w-[112px] sm:h-[104px] sm:w-[126px]"
+                                  ? "h-[84px] w-[100px] sm:h-[96px] sm:w-[114px]"
+                                  : "h-[96px] w-[118px] sm:h-[110px] sm:w-[132px]"
                               }`
                             : `flex items-center justify-center rounded-xl border-primary/10 bg-white text-primary shadow-[0_8px_24px_-14px_rgba(31,9,44,0.3)] hover:border-primary/45 hover:bg-neutral ${
                                 compactOrbit
-                                  ? "h-10 w-10 sm:h-12 sm:w-12"
-                                  : "h-12 w-12 sm:h-14 sm:w-14"
+                                  ? "h-11 w-11 sm:h-[52px] sm:w-[52px]"
+                                  : "h-[52px] w-[52px] sm:h-[60px] sm:w-[60px]"
                               }`
                         }`}
                       >
                         <Icon
-                          size={active ? (compactOrbit ? 26 : 30) : compactOrbit ? 20 : 23}
+                          size={active ? (compactOrbit ? 28 : 32) : compactOrbit ? 21 : 25}
                           strokeWidth={1.65}
                           aria-hidden="true"
                         />
                         {active && (
                           <span
                             className={`line-clamp-2 text-center font-semibold leading-4 ${
-                              compactOrbit ? "text-[9px]" : "text-[10px]"
+                              compactOrbit ? "text-[10px]" : "text-[11px]"
                             }`}
                           >
                             {service.title}
@@ -202,10 +201,10 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href={`/services#${activeService.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary motion-reduce:transition-none"
+                  className="group inline-flex items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary motion-reduce:transition-none"
                 >
                   {t("Explore service", "Découvrir le service")}
-                  <ArrowRight size={16} aria-hidden="true" />
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/services"

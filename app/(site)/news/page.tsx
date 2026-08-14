@@ -206,8 +206,9 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             <div className="mt-8 grid gap-5 md:grid-cols-2">
               {filteredNews.map((item, index) => (
                 <article
+                  id={`news-${item.slug ?? index + 1}`}
                   key={item.slug ?? item.title}
-                  className="group relative min-h-72 overflow-hidden rounded-3xl border border-primary/10 bg-white p-7 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/25 hover:shadow-[0_24px_55px_-38px_rgba(50,16,68,0.4)] sm:p-9"
+                  className="group relative min-h-72 scroll-mt-28 overflow-hidden rounded-3xl border border-primary/10 bg-white p-7 transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/25 hover:shadow-[0_24px_55px_-38px_rgba(50,16,68,0.4)] target:border-accent/40 target:ring-2 target:ring-accent/20 sm:p-9"
                 >
                   <span className="absolute inset-y-0 left-0 w-1 origin-bottom scale-y-0 bg-accent transition-transform duration-300 group-hover:scale-y-100" />
                   <div className="flex items-center justify-between gap-4">

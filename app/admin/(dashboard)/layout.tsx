@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
-import { getAdminDashboardData } from "@/backend/admin/queries";
+import { getAdminUnreadMessageCount } from "@/backend/admin/queries";
 import { requireAdmin } from "@/backend/auth/session";
 
 export const metadata: Metadata = {
@@ -17,10 +17,10 @@ export default async function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   const admin = await requireAdmin();
-  const dashboard = getAdminDashboardData();
+  const unreadMessages = getAdminUnreadMessageCount();
 
   return (
-    <AdminShell admin={admin} unreadMessages={dashboard.unreadMessageCount}>
+    <AdminShell admin={admin} unreadMessages={unreadMessages}>
       {children}
     </AdminShell>
   );

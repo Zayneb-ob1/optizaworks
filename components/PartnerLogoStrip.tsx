@@ -1,161 +1,109 @@
-"use client";
-
-import { m, useInView, useReducedMotion } from "framer-motion";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Building2,
-  Network,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef } from "react";
-import { useLanguage } from "@/components/LanguageProvider";
 import ScrollReveal from "@/components/ScrollReveal";
 import type { Partner } from "@/shared/content/partners";
+import { translate, type Locale } from "@/shared/i18n/config";
 
 type PartnerLogoStripProps = {
-  partners: Pick<Partner, "name" | "shortName" | "logo" | "website" | "featured">[];
+  partners: Pick<Partner, "name" | "shortName" | "logo" | "category" | "website" | "featured">[];
+  locale: Locale;
 };
 
-export default function PartnerLogoStrip({ partners }: PartnerLogoStripProps) {
-  const { t } = useLanguage();
-  const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef, { margin: "120px 0px", amount: 0.08 });
-  const reduceMotion = useReducedMotion();
-  const animationsActive = inView && !reduceMotion;
-  const featuredIndexes = new Set([0, 4, 5, 8, 9, 13, 15, 16]);
-  const featured = partners.filter(
-    (partner, index) => partner.featured ?? featuredIndexes.has(index),
-  );
+export default function PartnerLogoStrip({ partners, locale }: PartnerLogoStripProps) {
+  const t = (english: string, french: string) => translate(locale, english, french);
+  const findPartner = (shortName: string) =>
+    partners.find((partner) => partner.shortName === shortName);
+  const featured = [
+    findPartner("AREP Dakhla"),
+    findPartner("ENCG Settat"),
+    findPartner("Agence Urbaine Dakhla"),
+    ...partners.filter(
+      (partner) => partner.category === "Local government & justice",
+    ),
+    findPartner("CASM"),
+    findPartner("ISTAHT Touarga"),
+  ].filter((partner): partner is (typeof partners)[number] => Boolean(partner));
 
   return (
-    <section ref={sectionRef} aria-labelledby="partners-heading" className="overflow-hidden bg-neutral-100 py-16 sm:py-20">
-      <div className="site-container">
-        <ScrollReveal
-          className="relative overflow-hidden rounded-[2.5rem] bg-primary-dark px-5 py-8 text-white shadow-[0_35px_100px_-55px_rgba(31,9,44,0.75)] sm:px-8 sm:py-10 lg:px-10 lg:py-12"
-        >
-          <div className="pointer-events-none absolute -right-40 -top-48 h-[480px] w-[480px] rounded-full border border-white/[0.06]" />
-          <div className="pointer-events-none absolute -right-20 -top-28 h-[320px] w-[320px] rounded-full border border-white/[0.06]" />
-          <div className="pointer-events-none absolute -bottom-52 -left-28 h-[420px] w-[420px] rounded-full border border-accent/20" />
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.07]"
-            style={{
-              backgroundImage:
-                "radial-gradient(circle at center, rgba(255,255,255,0.75) 1px, transparent 1.5px)",
-              backgroundSize: "32px 32px",
-            }}
-          />
-
-          <div className="relative grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div className="max-w-3xl">
-              <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/55">
-                <span className="h-px w-8 bg-accent" />
-                {t("Trusted by institutions", "Ils nous font confiance")}
-              </p>
-              <h2 id="partners-heading" className="mt-5 max-w-2xl text-3xl font-semibold leading-tight tracking-[-0.035em] sm:text-5xl">
-                {t(
-                  "Selected public and professional organizations.",
-                  "Institutions publiques et organisations professionnelles sélectionnées.",
-                )}
-              </h2>
-            </div>
-
-            <div className="flex gap-3">
-              <div className="min-w-28 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 backdrop-blur-sm">
-                <Building2 size={18} className="text-white/55" strokeWidth={1.6} aria-hidden="true" />
-                <strong className="mt-3 block text-2xl font-semibold">
-                  {partners.length}
-                </strong>
-                <span className="text-[10px] uppercase tracking-[0.16em] text-white/45">
-                  Institutions
-                </span>
-              </div>
-              <div className="min-w-28 rounded-2xl border border-white/10 bg-white/[0.06] px-4 py-4 backdrop-blur-sm">
-                <Network size={18} className="text-white/55" strokeWidth={1.6} aria-hidden="true" />
-                <strong className="mt-3 block text-2xl font-semibold">04</strong>
-                <span className="text-[10px] uppercase tracking-[0.16em] text-white/45">
-                  {t("Sectors", "Secteurs")}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            className="relative mt-8 grid auto-cols-[8.25rem] grid-flow-col gap-3 overflow-x-auto pb-3 sm:auto-cols-[9rem] lg:grid-flow-row lg:grid-cols-8 lg:auto-cols-auto lg:overflow-visible lg:pb-0"
-          >
-            <div className="pointer-events-none absolute left-[4%] right-[4%] top-1/2 hidden border-t border-dashed border-white/10 lg:block" />
-
-            {featured.map((partner, index) => (
-              <div key={partner.shortName}>
-                <m.div
-                  animate={
-                    animationsActive
-                      ? {
-                          y: [1, -5 - (index % 2) * 2, 1],
-                          rotate: [
-                            0,
-                            index % 2 === 0 ? 0.4 : -0.4,
-                            0,
-                          ],
-                          scale: [1, 1.01, 1],
-                        }
-                      : { y: 0, rotate: 0, scale: 1 }
-                  }
-                  transition={{
-                    duration: 3.6 + (index % 4) * 0.35,
-                    delay: index * 0.24,
-                    repeat: animationsActive ? Infinity : 0,
-                    ease: "easeInOut",
-                  }}
-                >
-                  <a
-                    href={partner.website}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={t(
-                      `Visit ${partner.name} website`,
-                      `Visiter le site de ${partner.name}`,
-                    )}
-                    className="group relative flex h-28 overflow-hidden rounded-2xl border border-white/10 bg-white p-3 shadow-[0_20px_45px_-28px_rgba(0,0,0,0.8)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[0_24px_50px_-24px_rgba(106,13,173,0.65)] focus-visible:outline-white sm:h-32 lg:h-28"
-                    title={partner.name}
-                  >
-                    <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" />
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={partner.logo}
-                        alt={t(`${partner.name} logo`, `Logo de ${partner.name}`)}
-                        fill
-                        loading="lazy"
-                        quality={78}
-                        sizes="(max-width: 640px) 132px, (max-width: 1024px) 144px, 132px"
-                        className="object-contain p-1 opacity-100 transition-transform duration-300 group-hover:scale-[1.06]"
-                      />
-                    </div>
-                    <span className="absolute right-2.5 top-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-sm transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                      <ArrowUpRight size={13} aria-hidden="true" />
-                    </span>
-                    <span className="sr-only">{partner.name}</span>
-                  </a>
-                </m.div>
-              </div>
-            ))}
-          </div>
-
-          <div className="relative mt-6 flex justify-end border-t border-white/10 pt-5">
-            <Link
-              href="/references"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-primary transition-[transform,background-color,color] hover:-translate-y-0.5 hover:bg-accent hover:text-white"
-            >
+    <section id="institutions" aria-labelledby="partners-heading" className="home-deferred-render overflow-hidden bg-neutral-100 py-16 sm:py-24">
+      <ScrollReveal className="site-container">
+        <div className="grid gap-9 border-b border-primary/15 pb-10 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
+          <div className="max-w-4xl">
+            <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+              <span className="h-px w-8 bg-accent" aria-hidden="true" />
+              {t("Trusted by institutions", "Ils nous font confiance")}
+            </p>
+            <h2 id="partners-heading" className="mt-5 max-w-3xl text-[2.1rem] font-semibold leading-[1.04] tracking-[-0.045em] text-primary sm:text-[2.8rem] lg:text-[3.5rem]">
               {t(
-                `View all ${partners.length} websites`,
-                `Voir les ${partners.length} sites web`,
+                "Selected public and professional organizations.",
+                "Institutions publiques et organisations professionnelles sélectionnées.",
               )}
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            </h2>
           </div>
-        </ScrollReveal>
-      </div>
+
+          <dl className="grid grid-cols-2 border-l border-primary/15">
+            <div className="min-w-28 px-5 sm:min-w-36 sm:px-7">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-600">
+                Institutions
+              </dt>
+              <dd className="mt-2 text-4xl font-bold leading-none tracking-[-0.05em] text-primary sm:text-5xl">
+                {String(partners.length).padStart(2, "0")}
+              </dd>
+            </div>
+            <div className="min-w-28 border-l border-primary/15 px-5 sm:min-w-36 sm:px-7">
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.16em] text-neutral-600">
+                {t("Sectors", "Secteurs")}
+              </dt>
+              <dd className="mt-2 text-4xl font-bold leading-none tracking-[-0.05em] text-primary sm:text-5xl">
+                4
+              </dd>
+            </div>
+          </dl>
+        </div>
+
+        <div className="mt-10 grid grid-cols-2 border-l border-t border-primary/10 sm:grid-cols-4 lg:grid-cols-8">
+          {featured.map((partner) => (
+            <a
+              key={partner.shortName}
+              href={partner.website}
+              target="_blank"
+              rel="noreferrer"
+              aria-label={t(`Visit ${partner.name} website`, `Visiter le site de ${partner.name}`)}
+              title={partner.name}
+              className="group relative flex h-[7.5rem] items-center justify-center border-b border-r border-primary/10 bg-white p-3 transition-colors hover:bg-neutral-50 focus-visible:z-10 sm:h-[8.5rem] sm:p-3.5 lg:h-[7.5rem] lg:p-3"
+            >
+              <span className="relative h-full w-full">
+                <Image
+                  src={partner.logo}
+                  alt={t(`${partner.name} logo`, `Logo de ${partner.name}`)}
+                  fill
+                  loading="lazy"
+                  quality={78}
+                  sizes="(max-width: 639px) calc(50vw - 44px), (max-width: 1023px) calc(25vw - 44px), (max-width: 1279px) calc(12.5vw - 34px), 126px"
+                  className="object-contain p-0.5 transition-transform duration-300 group-hover:scale-[1.035]"
+                />
+              </span>
+              <span className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                <ArrowUpRight size={13} aria-hidden="true" />
+              </span>
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-7 flex justify-end">
+          <Link
+            href="/references"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-accent"
+          >
+            {t(
+              `View all ${partners.length} websites`,
+              `Voir les ${partners.length} sites web`,
+            )}
+            <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
+          </Link>
+        </div>
+      </ScrollReveal>
     </section>
   );
 }

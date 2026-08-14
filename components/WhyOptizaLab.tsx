@@ -68,7 +68,7 @@ export default function WhyOptizaLab({ locale }: { locale: Locale }) {
     <section
       id="why-optiza"
       aria-labelledby="why-heading"
-      className="bg-neutral-50 py-16 sm:py-20"
+      className="home-deferred-render bg-neutral-50 py-16 sm:py-20"
     >
       <div className="site-container">
         <ScrollReveal>
@@ -89,7 +89,7 @@ export default function WhyOptizaLab({ locale }: { locale: Locale }) {
         </ScrollReveal>
 
         <StaggerReveal
-          className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
           itemClassName="h-full"
         >
           {reasons.map((reason, index) => {
@@ -98,7 +98,7 @@ export default function WhyOptizaLab({ locale }: { locale: Locale }) {
             return (
               <article
                 key={reason.label}
-                className="relative h-full overflow-hidden rounded-2xl border border-primary/10 bg-white p-5 shadow-[0_18px_50px_-42px_rgba(50,16,68,0.45)] sm:p-6"
+                className="relative h-full overflow-hidden rounded-2xl border border-primary/10 bg-white p-5 shadow-[0_18px_50px_-42px_rgba(50,16,68,0.45)]"
               >
                 <span
                   aria-hidden="true"
@@ -114,13 +114,13 @@ export default function WhyOptizaLab({ locale }: { locale: Locale }) {
                   </span>
                 </div>
 
-                <p className="mt-6 text-[9px] font-bold uppercase tracking-[0.15em] text-accent">
+                <p className="mt-5 text-[10px] font-bold uppercase tracking-[0.14em] text-accent">
                   {t(reason.label, reason.labelFr)}
                 </p>
-                <h3 className="mt-2 text-lg font-semibold tracking-[-0.025em] text-primary">
+                <h3 className="mt-2 text-lg font-semibold leading-snug tracking-[-0.025em] text-primary">
                   {t(reason.title, reason.titleFr)}
                 </h3>
-                <p className="mt-3 text-xs leading-6 text-neutral-500">
+                <p className="mt-2.5 text-[13px] leading-[1.65] text-neutral-600">
                   {t(reason.description, reason.descriptionFr)}
                 </p>
               </article>

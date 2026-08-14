@@ -17,8 +17,8 @@ export async function generateMetadata(): Promise<Metadata> {
     title: translate(locale, "Our Work", "Nos réalisations"),
     description: translate(
       locale,
-      "Explore 17 public, institutional, education, and professional websites delivered by Optizaworks.",
-      "Découvrez 17 sites web publics, institutionnels, éducatifs et professionnels réalisés par Optizaworks.",
+      "Explore 18 public, institutional, education, and professional websites delivered by Optizaworks.",
+      "Découvrez 18 sites web publics, institutionnels, éducatifs et professionnels réalisés par Optizaworks.",
     ),
     path: "/portfolio",
     locale,
@@ -76,8 +76,8 @@ export default async function PortfolioPage({ searchParams }: PortfolioPageProps
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-8 text-neutral-500">
             {t(
-              "Explore 17 live websites delivered for public institutions, professional organizations, education, and regional agencies across Morocco.",
-              "Découvrez 17 sites en ligne réalisés pour des institutions publiques, des organisations professionnelles, des établissements d’enseignement et des agences régionales au Maroc.",
+              "Explore 18 live websites delivered for public institutions, professional organizations, education, and regional agencies across Morocco.",
+              "Découvrez 18 sites en ligne réalisés pour des institutions publiques, des organisations professionnelles, des établissements d’enseignement et des agences régionales au Maroc.",
             )}
           </p>
         </div>

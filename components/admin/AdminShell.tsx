@@ -17,7 +17,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { logoutAction } from "@/backend/admin/auth-actions";
 
 const links = [
@@ -40,14 +40,85 @@ type AdminShellProps = {
 export default function AdminShell({ children, admin, unreadMessages }: AdminShellProps) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [liveUnreadMessages, setLiveUnreadMessages] = useState(unreadMessages);
+  const [messageNotification, setMessageNotification] = useState("");
+  const previousUnreadRef = useRef(unreadMessages);
+  const latestUnreadIdRef = useRef<string | null>(null);
+
+  const refreshUnreadMessages = useCallback(async () => {
+    try {
+      const response = await fetch("/api/admin/messages/summary", {
+        cache: "no-store",
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) return;
+
+      const summary = (await response.json()) as {
+        unreadCount?: unknown;
+        latestUnread?: { id?: unknown; name?: unknown } | null;
+      };
+      if (typeof summary.unreadCount !== "number") return;
+
+      const latestId =
+        typeof summary.latestUnread?.id === "string"
+          ? summary.latestUnread.id
+          : null;
+      const latestName =
+        typeof summary.latestUnread?.name === "string"
+          ? summary.latestUnread.name
+          : "a new contact";
+
+      if (
+        summary.unreadCount > previousUnreadRef.current &&
+        latestId &&
+        latestId !== latestUnreadIdRef.current
+      ) {
+        setMessageNotification(`New message from ${latestName}`);
+      }
+
+      previousUnreadRef.current = summary.unreadCount;
+      latestUnreadIdRef.current = latestId;
+      setLiveUnreadMessages(summary.unreadCount);
+    } catch {
+      // Keep the server-rendered count if a background refresh is unavailable.
+    }
+  }, []);
 
   useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    previousUnreadRef.current = unreadMessages;
+    setLiveUnreadMessages(unreadMessages);
+  }, [unreadMessages]);
   useEffect(() => {
     if (!open) return;
     const close = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", close);
     return () => window.removeEventListener("keydown", close);
   }, [open]);
+  useEffect(() => {
+    const refresh = () => void refreshUnreadMessages();
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") refresh();
+    };
+
+    refresh();
+    const interval = window.setInterval(refreshWhenVisible, 30_000);
+    window.addEventListener("focus", refresh);
+    window.addEventListener("admin:messages-changed", refresh);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refresh);
+      window.removeEventListener("admin:messages-changed", refresh);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [refreshUnreadMessages]);
+  useEffect(() => {
+    if (!messageNotification) return;
+    const timeout = window.setTimeout(() => setMessageNotification(""), 5_000);
+    return () => window.clearTimeout(timeout);
+  }, [messageNotification]);
 
   const navigation = (
     <>
@@ -87,12 +158,17 @@ export default function AdminShell({ children, admin, unreadMessages }: AdminShe
             >
               <Icon size={18} strokeWidth={1.7} aria-hidden="true" />
               {link.label}
-              {link.label === "Messages" && unreadMessages > 0 && (
-                <span className="ml-auto rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-white">
-                  {unreadMessages}
-                </span>
-              )}
-              {active && <ChevronRight size={14} className="ml-auto" aria-hidden="true" />}
+              <span className="ml-auto flex items-center gap-2">
+                {link.label === "Messages" && liveUnreadMessages > 0 && (
+                  <span
+                    aria-label={`${liveUnreadMessages} unread ${liveUnreadMessages === 1 ? "message" : "messages"}`}
+                    className="rounded-full bg-accent px-2 py-0.5 text-[10px] font-bold text-white"
+                  >
+                    {liveUnreadMessages}
+                  </span>
+                )}
+                {active && <ChevronRight size={14} aria-hidden="true" />}
+              </span>
             </Link>
           );
         })}
@@ -159,6 +235,15 @@ export default function AdminShell({ children, admin, unreadMessages }: AdminShe
           {children}
         </main>
       </div>
+      {messageNotification && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed bottom-5 right-5 z-[80] max-w-[calc(100vw-2.5rem)] rounded-2xl border border-accent/20 bg-primary-dark px-5 py-4 text-sm font-semibold text-white shadow-xl sm:bottom-7 sm:right-7"
+        >
+          {messageNotification}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { partners, type PartnerCategory } from "@/shared/content/partners";
+import { projectMediaOverrides } from "@/shared/content/project-media";
 import type { ProjectType } from "@/shared/content/project-types";
 
 export { projectTypes } from "@/shared/content/project-types";
@@ -109,7 +110,8 @@ const featuredPartnerNames = new Set([
 
 const projectSlugs: Record<string, string> = {
   CCISSM: "cciss-souss-massa",
-  CARSM: "artisanat-souss-massa",
+  CASM: "artisanat-souss-massa",
+  CARSM: "agriculture-souss-massa",
   "CAG Dakhla": "agriculture-dakhla",
   ANPMA: "anpma",
   CARRSK: "artisanat-rabat-sale-kenitra",
@@ -173,21 +175,24 @@ const institutionalProjects: Project[] = partners
   .filter((partner) => !featuredPartnerNames.has(partner.shortName))
   .map((partner) => {
     const content = categoryContent[partner.category];
+    const slug = projectSlugs[partner.shortName];
+    const mediaOverride = projectMediaOverrides[slug];
 
     return {
-      slug: projectSlugs[partner.shortName],
-      title: partner.shortName,
+      slug,
+      title: mediaOverride?.title ?? partner.shortName,
       category: "web",
       categoryLabel: content.categoryLabel,
       summary: `The official digital platform for ${partner.name}, created to make its information, services, and updates easier to access.`,
       challenge: content.challenge,
       solution: content.solution,
       outcome: content.outcome,
-      image: partner.logo,
-      imageFit: "contain",
+      image: mediaOverride?.image ?? partner.logo,
+      imageFit: mediaOverride?.imageFit ?? "contain",
       services: content.services,
       year: "Live",
-      website: partner.website,
+      website: mediaOverride?.website ?? partner.website,
+      clientLogo: mediaOverride?.clientLogo,
     };
   });
 

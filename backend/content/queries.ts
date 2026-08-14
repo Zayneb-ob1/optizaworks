@@ -13,9 +13,18 @@ import {
 } from "@/backend/db/schema";
 import type { Faq } from "@/shared/content/faqs";
 import type { NewsItem } from "@/shared/content/news";
-import type { Partner, PartnerCategory } from "@/shared/content/partners";
+import {
+  partnerPresentationOverrides,
+  partners as partnerFixtures,
+  type Partner,
+  type PartnerCategory,
+} from "@/shared/content/partners";
 import type { Product } from "@/shared/content/products";
-import type { Project } from "@/shared/content/projects";
+import { projectMediaOverrides } from "@/shared/content/project-media";
+import {
+  projects as projectFixtures,
+  type Project,
+} from "@/shared/content/projects";
 import type { ProjectType } from "@/shared/content/project-types";
 import type { Service, ServiceIcon } from "@/shared/content/services";
 import type { Locale } from "@/shared/i18n/config";
@@ -54,22 +63,45 @@ export function getPublishedServices(locale: Locale = "en"): Service[] {
 }
 
 function toProject(project: typeof projects.$inferSelect): Project {
+  const mediaOverride = projectMediaOverrides[project.slug];
+
   return {
     slug: project.slug,
-    title: project.title,
+    title: mediaOverride?.title ?? project.title,
     category: project.category as ProjectType,
     categoryLabel: project.categoryLabel,
     summary: project.summary,
     challenge: project.challenge,
     solution: project.solution,
     outcome: project.outcome,
-    image: project.image,
-    imageFit: project.imageFit,
+    image: mediaOverride?.image ?? project.image,
+    imageFit: mediaOverride?.imageFit ?? project.imageFit,
     services: project.services,
     year: project.year,
-    website: project.website ?? undefined,
-    clientLogo: project.clientLogo ?? undefined,
+    website: mediaOverride?.website ?? project.website ?? undefined,
+    clientLogo: mediaOverride?.clientLogo ?? project.clientLogo ?? undefined,
   };
+}
+
+const supplementalOrganizationWebsite =
+  "https://chambreagriculturesm.com/fr/";
+const supplementalProjectSlug = "agriculture-souss-massa";
+
+const supplementalOrganization = partnerFixtures.find(
+  (partner) => partner.website === supplementalOrganizationWebsite,
+);
+const supplementalProject = projectFixtures.find(
+  (project) => project.slug === supplementalProjectSlug,
+);
+
+function hasStoredProject(slug: string): boolean {
+  return Boolean(
+    db
+      .select({ id: projects.id })
+      .from(projects)
+      .where(eq(projects.slug, slug))
+      .get(),
+  );
 }
 
 const getPublishedProjectsCached = cache((
@@ -82,15 +114,26 @@ const getPublishedProjectsCached = cache((
   if (category) conditions.push(eq(projects.category, category));
   if (featuredOnly) conditions.push(eq(projects.featured, true));
 
-  let rows = db
+  const rows = db
     .select()
     .from(projects)
     .where(and(...conditions))
     .orderBy(asc(projects.sortOrder), asc(projects.id))
     .all();
 
-  if (limit) rows = rows.slice(0, limit);
-  return rows.map(toProject).map((project) => localizeProject(project, locale));
+  let publishedProjects = rows.map(toProject);
+
+  if (
+    supplementalProject &&
+    !featuredOnly &&
+    (!category || supplementalProject.category === category) &&
+    !hasStoredProject(supplementalProject.slug)
+  ) {
+    publishedProjects.push(supplementalProject);
+  }
+
+  if (limit) publishedProjects = publishedProjects.slice(0, limit);
+  return publishedProjects.map((project) => localizeProject(project, locale));
 });
 
 export function getPublishedProjects(options?: {
@@ -116,7 +159,17 @@ const getPublishedProjectCached = cache((
     .from(projects)
     .where(and(eq(projects.slug, slug), eq(projects.published, true)))
     .get();
-  return project ? localizeProject(toProject(project), locale) : undefined;
+  if (project) return localizeProject(toProject(project), locale);
+
+  if (
+    slug === supplementalProjectSlug &&
+    supplementalProject &&
+    !hasStoredProject(slug)
+  ) {
+    return localizeProject(supplementalProject, locale);
+  }
+
+  return undefined;
 });
 
 export function getPublishedProject(
@@ -133,20 +186,45 @@ export function getPublishedOrganizations(options?: {
     ? and(eq(organizations.published, true), eq(organizations.featured, true))
     : eq(organizations.published, true);
 
-  return db
+  const publishedOrganizations: Partner[] = db
     .select()
     .from(organizations)
     .where(condition)
     .orderBy(asc(organizations.sortOrder), asc(organizations.id))
     .all()
-    .map((organization) => ({
-      name: organization.name,
-      shortName: organization.shortName,
-      logo: organization.logo,
-      category: organization.category as PartnerCategory,
-      website: organization.website,
-      featured: organization.featured,
-    }));
+    .map((organization) => {
+      const presentation =
+        partnerPresentationOverrides[organization.website];
+
+      return {
+        name: organization.name,
+        shortName: presentation?.shortName ?? organization.shortName,
+        logo: presentation?.logo ?? organization.logo,
+        category: organization.category as PartnerCategory,
+        website: organization.website,
+        featured: organization.featured,
+      };
+    });
+
+  const hasStoredSupplement = supplementalOrganization
+    ? Boolean(
+        db
+          .select({ id: organizations.id })
+          .from(organizations)
+          .where(eq(organizations.website, supplementalOrganization.website))
+          .get(),
+      )
+    : false;
+
+  if (
+    !options?.featuredOnly &&
+    supplementalOrganization &&
+    !hasStoredSupplement
+  ) {
+    publishedOrganizations.push(supplementalOrganization);
+  }
+
+  return publishedOrganizations;
 }
 
 export function getPublishedFaqs(locale: Locale = "en"): Faq[] {

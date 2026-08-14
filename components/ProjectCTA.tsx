@@ -49,18 +49,10 @@ function ClimbingRobot({ active }: { active: boolean }) {
         strokeWidth="1.7"
       />
 
-      <m.g
+      <g
         filter="url(#cta-robot-shadow)"
-        initial={false}
-        animate={active ? { y: [0, -3, 0, 2, 0] } : { y: 0 }}
-        transition={{ duration: 4.8, ease: "easeInOut", repeat: loop }}
       >
-        <m.g
-          initial={false}
-          animate={active ? { rotate: [0, 2.6, 0, -1.4, 0] } : { rotate: 0 }}
-          transition={{ duration: 6.2, ease: "easeInOut", repeat: loop }}
-          style={{ transformBox: "fill-box", transformOrigin: "50% 80%" }}
-        >
+        <g>
           <path
             d="M33 57 C33 48 40 43 51 43 H61 C73 43 80 50 79 60 L78 72 C77 80 70 84 59 84 H49 C38 84 31 78 32 69 Z"
             fill="url(#cta-robot-shell)"
@@ -74,18 +66,13 @@ function ClimbingRobot({ active }: { active: boolean }) {
           <path d="M34 61 H30 C28 61 27 63 27 66 V69 C27 72 29 73 32 73" fill="none" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
           <circle cx="28" cy="67" r="2.2" fill="#60a5fa" />
 
-          <m.g
-            initial={false}
-            animate={active ? { scaleY: [1, 1, 0.08, 1, 1] } : { scaleY: 1 }}
-            transition={{ duration: 4.2, times: [0, 0.78, 0.82, 0.87, 1], repeat: loop, ease: "easeInOut" }}
-            style={{ transformBox: "fill-box", transformOrigin: "50% 50%" }}
-          >
+          <g>
             <rect x="46" y="60" width="5" height="7" rx="2.5" fill="#67e8f9" />
             <rect x="63" y="60" width="5" height="7" rx="2.5" fill="#67e8f9" />
-          </m.g>
+          </g>
           <path d="M51 70 C54 73 59 73 62 70" fill="none" stroke="#a5f3fc" strokeLinecap="round" strokeWidth="1.5" />
           <path d="M45 54 C49 51 53 51 56 52" fill="none" stroke="#ffffff" strokeLinecap="round" strokeOpacity="0.48" />
-        </m.g>
+        </g>
 
         <path
           d="M41 82 C35 86 32 94 33 104 L35 118 C36 125 42 129 51 129 H62 C71 129 76 124 77 116 L78 101 C78 91 73 85 67 82 Z"
@@ -94,15 +81,12 @@ function ClimbingRobot({ active }: { active: boolean }) {
           strokeWidth="1.5"
         />
         <rect x="43" y="91" width="25" height="22" rx="9" fill="#e8f0ff" stroke="#c7d7f2" />
-        <m.circle
+        <circle
           cx="55.5"
           cy="102"
           r="4.4"
           fill="#6A0DAD"
-          initial={false}
-          animate={active ? { opacity: [0.7, 1, 0.7], scale: [0.9, 1.12, 0.9] } : { opacity: 0.85, scale: 1 }}
-          transition={{ duration: 2.4, ease: "easeInOut", repeat: loop }}
-          style={{ transformOrigin: "55.5px 102px" }}
+          opacity="0.85"
         />
         <circle cx="55.5" cy="102" r="1.8" fill="#bfdbfe" />
 
@@ -111,25 +95,20 @@ function ClimbingRobot({ active }: { active: boolean }) {
         <circle cx="27" cy="68" r="5.5" fill="url(#cta-robot-shell)" stroke="#ffffff" />
         <path d="M25 67 C28 63 31 62 33 64" fill="none" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" />
 
-        <m.g
-          initial={false}
-          animate={active ? { rotate: [0, -4.5, 0, -2, 0] } : { rotate: 0 }}
-          transition={{ duration: 3.8, ease: "easeInOut", repeat: loop }}
-          style={{ transformBox: "fill-box", transformOrigin: "7% 42%" }}
-        >
+        <g>
           <path d="M72 88 C82 89 86 96 91 101" fill="none" stroke="#dce8f8" strokeWidth="8" strokeLinecap="round" />
           <path d="M72 88 C82 89 86 96 91 101" fill="none" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeOpacity="0.55" />
           <circle cx="93" cy="103" r="5.3" fill="url(#cta-robot-shell)" stroke="#ffffff" />
           <path d="M95 102 L102 99" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" />
           <path d="M96 105 L102 105" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" />
-        </m.g>
+        </g>
 
         <path d="M44 127 L41 136" stroke="#d6e1f2" strokeWidth="8" strokeLinecap="round" />
         <path d="M67 127 L70 135" stroke="#d6e1f2" strokeWidth="8" strokeLinecap="round" />
         <path d="M37 137 C39 133 45 133 48 137" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
         <path d="M65 137 C68 133 74 133 77 137" fill="none" stroke="#ffffff" strokeWidth="6" strokeLinecap="round" />
         <path d="M39 137 H48 M66 137 H77" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" />
-      </m.g>
+      </g>
     </m.svg>
   );
 }
@@ -142,9 +121,9 @@ export default function ProjectCTA() {
   const active = inView && !reducedMotion;
 
   return (
-    <section ref={sectionRef} aria-labelledby="project-cta-heading" className="overflow-hidden bg-neutral-50 pb-16 pt-4 sm:pb-20 sm:pt-6">
+    <section ref={sectionRef} aria-labelledby="project-cta-heading" className="home-deferred-render overflow-hidden bg-neutral-50 pb-14 pt-4 sm:pb-16 sm:pt-5">
       <div className="site-container">
-        <ScrollReveal className="relative isolate overflow-hidden px-6 py-14 text-center sm:px-12 sm:py-20">
+        <ScrollReveal className="relative isolate overflow-hidden px-6 py-12 text-center sm:px-12 sm:py-16">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-0 -z-10 opacity-80 [background-image:radial-gradient(circle_at_16%_20%,rgba(106,13,173,0.10),transparent_26%),radial-gradient(circle_at_84%_78%,rgba(59,130,246,0.11),transparent_27%)]"
@@ -154,17 +133,17 @@ export default function ProjectCTA() {
             className="pointer-events-none absolute inset-0 -z-10 opacity-[0.22] [background-image:linear-gradient(rgba(50,16,68,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(50,16,68,0.08)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_70%,transparent)]"
           />
 
-          <h2 id="project-cta-heading" className="mx-auto max-w-2xl text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+          <h2 id="project-cta-heading" className="mx-auto max-w-2xl text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-primary sm:text-5xl">
             {t("Have a project in mind?", "Vous avez un projet en tête ?")}
           </h2>
-          <p className="mx-auto mt-5 max-w-xl text-sm leading-7 text-neutral-700">
+          <p className="mx-auto mt-4 max-w-xl text-pretty text-[15px] leading-7 text-neutral-700">
             {t(
-              "Tell us where you want to go. We will help you find the clearest way to build it.",
-              "Dites-nous où vous voulez aller. Nous vous aiderons à définir le chemin le plus clair pour le concrétiser.",
+              "Let’s talk about your project and find the solution that best fits your needs.",
+              "Parlons de votre projet et trouvons la solution adaptée à vos besoins.",
             )}
           </p>
 
-          <div className="mt-6 flex justify-center pt-10 sm:pt-12">
+          <div className="mt-4 flex justify-center pt-9 sm:pt-10">
             <m.div
               className="group relative"
               whileHover={reducedMotion ? undefined : { y: -2 }}
@@ -174,25 +153,19 @@ export default function ProjectCTA() {
                 <ClimbingRobot active={active} />
               </div>
 
-              <m.div
+              <div
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-4 -bottom-3 h-6 rounded-full bg-accent/20"
-                animate={active ? { scaleX: [0.92, 1.05, 0.92], opacity: [0.2, 0.35, 0.2] } : { opacity: 0.2 }}
-                transition={{ duration: 3.2, ease: "easeInOut", repeat: active ? Infinity : 0 }}
+                className="pointer-events-none absolute inset-x-4 -bottom-3 h-6 rounded-full bg-accent/20 opacity-20"
               />
 
               <Link
                 href="/contact"
                 className="relative z-10 inline-flex min-h-14 items-center gap-3 rounded-full border border-white/20 bg-gradient-to-r from-accent to-[#4f46e5] px-7 py-4 text-sm font-semibold text-white shadow-[0_14px_34px_rgba(106,13,173,0.25)] transition-shadow duration-300 hover:shadow-[0_18px_40px_rgba(106,13,173,0.34)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
               >
-                {t("Start a conversation", "Démarrer la conversation")}
-                <m.span
-                  aria-hidden="true"
-                  animate={active ? { x: [0, 3, 0] } : { x: 0 }}
-                  transition={{ duration: 1.8, ease: "easeInOut", repeat: active ? Infinity : 0, repeatDelay: 1.2 }}
-                >
+                {t("Start a project", "Démarrer un projet")}
+                <span aria-hidden="true">
                   <ArrowRight size={17} />
-                </m.span>
+                </span>
               </Link>
             </m.div>
           </div>

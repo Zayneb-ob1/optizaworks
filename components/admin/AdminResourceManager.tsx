@@ -29,6 +29,50 @@ function displayValue(row: AdminRow | undefined, key: string) {
   return value === null || value === undefined ? "" : String(value);
 }
 
+function ReadOnlyResourceDetails({
+  resource,
+  row,
+}: {
+  resource: AdminResource;
+  row: AdminRow;
+}) {
+  const definition = resourceDefinitions[resource];
+
+  return (
+    <div className="rounded-2xl bg-neutral-50 p-4 sm:p-6">
+      <div className="rounded-2xl border border-accent/15 bg-white px-4 py-3">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent">
+          Source-managed record
+        </p>
+        <p className="mt-1 text-xs leading-5 text-neutral-500">
+          This published entry is managed by the website content catalog and is shown here read-only.
+        </p>
+      </div>
+      <dl className="mt-5 grid gap-x-6 gap-y-5 sm:grid-cols-2">
+        {definition.fields.map((field) => {
+          const value =
+            field.type === "checkbox"
+              ? row[field.name]
+                ? "Yes"
+                : "No"
+              : displayValue(row, field.name) || "—";
+
+          return (
+            <div key={field.name} className={field.wide ? "sm:col-span-2" : ""}>
+              <dt className="text-xs font-semibold uppercase tracking-[0.12em] text-neutral-500">
+                {field.label}
+              </dt>
+              <dd className="mt-1.5 whitespace-pre-wrap break-words text-sm leading-6 text-primary">
+                {value}
+              </dd>
+            </div>
+          );
+        })}
+      </dl>
+    </div>
+  );
+}
+
 function ResourceField({
   field,
   row,
@@ -236,33 +280,41 @@ export default function AdminResourceManager({
         </div>
 
         <div className="mt-2 divide-y divide-primary/10">
-          {filtered.map((row) => (
-            <details key={String(row.id)} className="group py-2">
-              <summary className="flex min-h-16 cursor-pointer list-none items-center gap-4 rounded-2xl px-3 py-3 hover:bg-neutral-50">
-                <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${row.published ? "bg-emerald-500" : "bg-neutral-300"}`} />
-                <span className="min-w-0 flex-1">
-                  <strong className="block truncate text-sm font-semibold text-primary">
-                    {displayValue(row, definition.titleField)}
-                  </strong>
-                  {definition.subtitleField && (
-                    <span className="mt-1 block truncate text-xs text-neutral-500">
-                      {displayValue(row, definition.subtitleField)}
-                    </span>
-                  )}
-                </span>
-                <span className="hidden text-xs font-medium text-neutral-500 sm:block">
-                  {row.published ? "Published" : "Draft"}
-                </span>
-                <ChevronDown size={17} className="text-neutral-500 transition-transform group-open:rotate-180" />
-              </summary>
-              <div className="rounded-2xl bg-neutral-50 p-4 sm:p-6">
-                <div className="flex justify-end">
-                  <DeleteButton resource={resource} id={Number(row.id)} />
-                </div>
-                <ResourceForm resource={resource} row={row} organizationOptions={organizationOptions} />
-              </div>
-            </details>
-          ))}
+          {filtered.map((row) => {
+            const readOnly = row._readOnly === true;
+
+            return (
+              <details key={String(row.id)} className="group py-2">
+                <summary className="flex min-h-16 cursor-pointer list-none items-center gap-4 rounded-2xl px-3 py-3 hover:bg-neutral-50">
+                  <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${row.published ? "bg-emerald-500" : "bg-neutral-300"}`} />
+                  <span className="min-w-0 flex-1">
+                    <strong className="block truncate text-sm font-semibold text-primary">
+                      {displayValue(row, definition.titleField)}
+                    </strong>
+                    {definition.subtitleField && (
+                      <span className="mt-1 block truncate text-xs text-neutral-500">
+                        {displayValue(row, definition.subtitleField)}
+                      </span>
+                    )}
+                  </span>
+                  <span className="hidden text-xs font-medium text-neutral-500 sm:block">
+                    {readOnly ? "Source-managed" : row.published ? "Published" : "Draft"}
+                  </span>
+                  <ChevronDown size={17} className="text-neutral-500 transition-transform group-open:rotate-180" />
+                </summary>
+                {readOnly ? (
+                  <ReadOnlyResourceDetails resource={resource} row={row} />
+                ) : (
+                  <div className="rounded-2xl bg-neutral-50 p-4 sm:p-6">
+                    <div className="flex justify-end">
+                      <DeleteButton resource={resource} id={Number(row.id)} />
+                    </div>
+                    <ResourceForm resource={resource} row={row} organizationOptions={organizationOptions} />
+                  </div>
+                )}
+              </details>
+            );
+          })}
           {filtered.length === 0 && (
             <p className="py-14 text-center text-sm text-neutral-500">No matching records.</p>
           )}

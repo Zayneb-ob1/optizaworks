@@ -147,7 +147,7 @@ export default function HeroSection({ backdrop, locale }: HeroSectionProps) {
               </span>
             </h1>
 
-            <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-white/50 sm:text-[15px] sm:leading-7 lg:mx-0">
+            <p className="mx-auto mt-6 max-w-xl text-[13px] leading-6 text-white/60 sm:text-sm sm:leading-7 lg:mx-0">
               {t(
                 "OptizaWorks builds secure websites, software, AI systems, and digital infrastructure that give ambitious organizations their own technological gravity.",
                 "OptizaWorks conçoit des sites web, des logiciels, des systèmes d’IA et des infrastructures numériques sécurisés qui donnent aux organisations ambitieuses leur propre force technologique.",
@@ -157,10 +157,12 @@ export default function HeroSection({ backdrop, locale }: HeroSectionProps) {
             <div className="mt-8 flex flex-col items-center gap-4 lg:items-start">
               <Link
                 href="/portfolio"
-                className="group inline-flex items-center gap-3 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white shadow-[0_12px_34px_-18px_rgba(106,13,173,0.9)] transition-[transform,background-color] duration-300 hover:-translate-y-0.5 hover:bg-[#7d20ba]"
+                className="group inline-flex min-h-12 items-center gap-3.5 rounded-full border border-white/25 bg-accent px-7 py-3.5 text-sm font-semibold text-white shadow-[0_14px_38px_rgba(106,13,173,0.48)] transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#7d20ba] hover:shadow-[0_18px_44px_rgba(106,13,173,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03040b] sm:px-8 sm:text-[15px]"
               >
                 {t("Explore our work", "Découvrir nos réalisations")}
-                <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-accent">
+                  <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                </span>
               </Link>
               <span className="font-mono text-[8px] uppercase leading-5 tracking-[0.14em] text-white/35">
                 {t("Strategy / Design", "Stratégie / Design")}

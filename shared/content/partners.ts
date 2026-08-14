@@ -13,6 +13,15 @@ export interface Partner {
   featured?: boolean;
 }
 
+export const partnerPresentationOverrides: Readonly<
+  Record<string, Pick<Partner, "shortName" | "logo">>
+> = {
+  "https://casm.ma/": {
+    shortName: "CASM",
+    logo: "/partners/casm.webp",
+  },
+};
+
 export const partners: Partner[] = [
   {
     name: "Chambre de Commerce, d’Industrie et de Services Souss-Massa",
@@ -23,10 +32,17 @@ export const partners: Partner[] = [
   },
   {
     name: "Chambre d’Artisanat de la Région Souss-Massa",
+    shortName: "CASM",
+    logo: "/partners/casm.webp",
+    category: "Economic chambers & agencies",
+    website: "https://casm.ma/",
+  },
+  {
+    name: "Chambre d’Agriculture de la Région Souss-Massa",
     shortName: "CARSM",
     logo: "/partners/carsm.svg",
     category: "Economic chambers & agencies",
-    website: "https://casm.ma/",
+    website: "https://chambreagriculturesm.com/fr/",
   },
   {
     name: "Chambre d’Agriculture de la Région Dakhla-Oued Eddahab",

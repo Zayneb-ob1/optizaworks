@@ -45,6 +45,11 @@ textarea {
   .site-container {
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
   }
+
+  .home-deferred-render {
+    content-visibility: auto;
+    contain-intrinsic-block-size: auto 720px;
+  }
 }
 
 @keyframes hero-ambient-drift {

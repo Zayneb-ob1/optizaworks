@@ -151,7 +151,7 @@ export default function Navbar({ services, projects }: NavbarProps) {
     pathname.startsWith("/portfolio") || pathname === "/references";
 
   const navLinkClass = (active: boolean) =>
-    `relative flex items-center gap-1 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+    `relative flex items-center gap-1 rounded-full px-[18px] py-2 text-[15px] font-medium transition-colors ${
       solid
         ? active
           ? "text-accent"
@@ -182,7 +182,7 @@ export default function Navbar({ services, projects }: NavbarProps) {
 
         <div className="hidden items-center gap-2 xl:flex">
           <nav
-            className={`flex items-center gap-1 rounded-full px-1.5 py-1 transition-colors duration-300 ${
+            className={`flex items-center gap-1.5 rounded-full px-1.5 py-1 transition-colors duration-300 ${
               solid
                 ? "bg-transparent"
                 : "bg-primary-dark/50 ring-1 ring-white/15 backdrop-blur-md"

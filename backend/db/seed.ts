@@ -88,12 +88,21 @@ const contentSeeded = db.transaction((tx) => {
 
   if (contentAlreadySeeded) return false;
 
-  const featuredPartners = new Set([0, 4, 5, 8, 9, 13, 15, 16]);
+  const featuredPartners = new Set([
+    "CCISSM",
+    "CARRSK",
+    "AREP Dakhla",
+    "Office des Changes",
+    "EMI",
+    "ENCG Settat",
+    "Région de l’Oriental",
+    "CSPJ",
+  ]);
   partnerFixtures.forEach((partner, index) => {
     tx.insert(organizations)
       .values({
         ...partner,
-        featured: featuredPartners.has(index),
+        featured: featuredPartners.has(partner.shortName),
         published: true,
         sortOrder: index,
         updatedAt: new Date(),
@@ -105,7 +114,7 @@ const contentSeeded = db.transaction((tx) => {
           logo: partner.logo,
           category: partner.category,
           website: partner.website,
-          featured: featuredPartners.has(index),
+          featured: featuredPartners.has(partner.shortName),
           sortOrder: index,
           updatedAt: new Date(),
         },

@@ -81,8 +81,9 @@ export default async function ProductsPage() {
           <div className="mt-14 grid gap-6 lg:grid-cols-3">
             {products.map((product) => (
               <article
+                id={`product-${product.code.toLowerCase()}`}
                 key={product.code}
-                className="flex flex-col rounded-3xl border border-primary/10 bg-white p-7 sm:p-8"
+                className="flex scroll-mt-28 flex-col rounded-3xl border border-primary/10 bg-white p-7 target:border-accent/40 target:ring-2 target:ring-accent/20 sm:p-8"
               >
                 <div className="flex items-center justify-between">
                   <span className="flex h-12 min-w-12 items-center justify-center rounded-2xl bg-primary px-3 text-xs font-bold tracking-[0.12em] text-white">
