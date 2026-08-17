@@ -3,7 +3,6 @@
 import { AnimatePresence, m } from "framer-motion";
 import {
   ArrowRight,
-  BriefcaseBusiness,
   ChevronDown,
   Menu,
   Rocket,
@@ -17,10 +16,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/LanguageProvider";
 import { serviceIcons } from "@/components/services/service-icons";
-import type { Project } from "@/shared/content/projects";
 import type { Service } from "@/shared/content/services";
 
-type MenuName = "services" | "work" | null;
+type MenuName = "services" | null;
 
 function BrandLogo({ inverted }: { inverted: boolean }) {
   return (
@@ -45,10 +43,9 @@ function BrandLogo({ inverted }: { inverted: boolean }) {
 
 type NavbarProps = {
   services: Pick<Service, "slug" | "title" | "description" | "icon">[];
-  projects: Pick<Project, "slug" | "title" | "categoryLabel" | "image">[];
 };
 
-export default function Navbar({ services, projects }: NavbarProps) {
+export default function Navbar({ services }: NavbarProps) {
   const pathname = usePathname();
   const { locale, pending, changeLocale, t } = useLanguage();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -147,9 +144,6 @@ export default function Navbar({ services, projects }: NavbarProps) {
   const hasDarkHero =
     pathname === "/" || pathname === "/news" || pathname === "/references";
   const solid = !hasDarkHero || scrolled || mobileOpen || activeMenu !== null;
-  const workActive =
-    pathname.startsWith("/portfolio") || pathname === "/references";
-
   const navLinkClass = (active: boolean) =>
     `relative flex items-center gap-1 rounded-full px-[18px] py-2 text-[15px] font-medium transition-colors ${
       solid
@@ -189,27 +183,6 @@ export default function Navbar({ services, projects }: NavbarProps) {
             }`}
             aria-label={t("Primary navigation", "Navigation principale")}
           >
-            <Link href="/" className={navLinkClass(pathname === "/")} aria-current={pathname === "/" ? "page" : undefined}>
-              {t("Home", "Accueil")}
-              {pathname === "/" && (
-                <span
-                  className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
-                    solid ? "bg-accent" : "bg-white"
-                  }`}
-                />
-              )}
-            </Link>
-            <Link href="/about" className={navLinkClass(pathname === "/about")} aria-current={pathname === "/about" ? "page" : undefined}>
-              {t("About", "À propos")}
-              {pathname === "/about" && (
-                <span
-                  className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
-                    solid ? "bg-accent" : "bg-white"
-                  }`}
-                />
-              )}
-            </Link>
-
             <div
               onMouseEnter={() => openMenu("services")}
               onMouseLeave={scheduleClose}
@@ -239,34 +212,38 @@ export default function Navbar({ services, projects }: NavbarProps) {
               </Link>
             </div>
 
-            <div
-              onMouseEnter={() => openMenu("work")}
-              onMouseLeave={scheduleClose}
-              onFocus={() => openMenu("work")}
-            >
-              <Link
-                href="/portfolio"
-                className={navLinkClass(workActive)}
-                aria-expanded={activeMenu === "work"}
-                aria-haspopup="true"
-                aria-controls="work-menu"
-              >
-                {t("Work", "Réalisations")}
-                <ChevronDown
-                  size={15}
-                  className={`transition-transform ${
-                    activeMenu === "work" ? "rotate-180" : ""
+            <Link href="/references" className={navLinkClass(pathname === "/references")} aria-current={pathname === "/references" ? "page" : undefined}>
+              {t("References", "Références")}
+              {pathname === "/references" && (
+                <span
+                  className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
+                    solid ? "bg-accent" : "bg-white"
                   }`}
                 />
-                {workActive && (
-                  <span
-                    className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
-                      solid ? "bg-accent" : "bg-white"
-                    }`}
-                  />
-                )}
-              </Link>
-            </div>
+              )}
+            </Link>
+
+            <Link href="/products" className={navLinkClass(pathname === "/products")} aria-current={pathname === "/products" ? "page" : undefined}>
+              {t("Products", "Produits")}
+              {pathname === "/products" && (
+                <span
+                  className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
+                    solid ? "bg-accent" : "bg-white"
+                  }`}
+                />
+              )}
+            </Link>
+
+            <Link href="/about" className={navLinkClass(pathname === "/about")} aria-current={pathname === "/about" ? "page" : undefined}>
+              {t("About", "À propos")}
+              {pathname === "/about" && (
+                <span
+                  className={`absolute inset-x-4 -bottom-0.5 h-0.5 rounded-full ${
+                    solid ? "bg-accent" : "bg-white"
+                  }`}
+                />
+              )}
+            </Link>
 
             <Link href="/contact" className={navLinkClass(pathname === "/contact")} aria-current={pathname === "/contact" ? "page" : undefined}>
               Contact
@@ -466,107 +443,6 @@ export default function Navbar({ services, projects }: NavbarProps) {
       </AnimatePresence>
 
       <AnimatePresence>
-        {activeMenu === "work" && (
-          <m.div
-            id="work-menu"
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.18 }}
-            className="absolute inset-x-0 top-full hidden px-4 xl:block"
-            onMouseEnter={() => openMenu("work")}
-            onMouseLeave={scheduleClose}
-          >
-            <div className="mx-auto mt-2 max-w-6xl overflow-hidden rounded-3xl border border-primary/10 bg-white p-8 shadow-[0_28px_70px_-20px_rgba(31,9,44,0.45)] ring-1 ring-black/5">
-              <div className="mb-5 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                    {t("Selected work", "Réalisations sélectionnées")}
-                  </p>
-                  <h2 className="mt-1 text-xl font-semibold text-primary">
-                    {t("Recent digital products", "Produits numériques récents")}
-                  </h2>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Link
-                    href="/references"
-                    onClick={closeAll}
-                    className="flex items-center gap-2 text-xs font-semibold text-primary hover:text-accent"
-                  >
-                    {t("References", "Références")}
-                    <ArrowRight size={14} />
-                  </Link>
-                  <Link
-                    href="/portfolio"
-                    onClick={closeAll}
-                    className="flex items-center gap-2 text-xs font-semibold text-primary hover:text-accent"
-                  >
-                    {t("All projects", "Tous les projets")}
-                    <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-5">
-                {projects.slice(0, 3).map((project) => (
-                  <Link
-                    key={project.slug}
-                    href={`/portfolio/${project.slug}`}
-                    onClick={closeAll}
-                    className="group grid grid-cols-[112px_1fr] overflow-hidden rounded-2xl border border-primary/10 bg-neutral-50 transition-colors hover:border-accent/30"
-                  >
-                    <span className="relative min-h-24 overflow-hidden">
-                      <Image
-                        src={project.image}
-                        alt=""
-                        fill
-                        sizes="112px"
-                        quality={75}
-                        loading="lazy"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </span>
-                    <span className="flex min-w-0 flex-col justify-center p-4">
-                      <small className="text-[10px] font-semibold uppercase tracking-[0.14em] text-accent">
-                        {project.categoryLabel}
-                      </small>
-                      <strong className="mt-1 truncate text-sm font-semibold text-primary">
-                        {project.title}
-                      </strong>
-                      <span className="mt-2 flex items-center gap-1 text-xs text-neutral-500">
-                        {t("View case study", "Voir l’étude de cas")}
-                        <ArrowRight size={12} />
-                      </span>
-                    </span>
-                  </Link>
-                ))}
-              </div>
-              <div className="mt-6 flex items-center gap-3 border-t border-primary/10 pt-5">
-                <BriefcaseBusiness size={16} className="text-accent" />
-                <span className="text-xs text-neutral-500">
-                  {t("Browse by:", "Filtrer par :")}
-                </span>
-                {[ 
-                  [t("Web", "Web"), "web"],
-                  [t("Software", "Logiciels"), "software"],
-                  [t("Branding", "Identité visuelle"), "branding"],
-                  [t("App", "Applications"), "app"],
-                ].map(([label, type]) => (
-                  <Link
-                    key={type}
-                    href={`/portfolio?type=${type}`}
-                    onClick={closeAll}
-                    className="rounded-full border border-primary/10 bg-white px-3 py-1.5 text-xs font-medium text-primary hover:border-accent/30"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </m.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
         {mobileOpen && (
           <m.nav
             id="mobile-navigation"
@@ -580,32 +456,11 @@ export default function Navbar({ services, projects }: NavbarProps) {
             <div className="mx-auto max-w-7xl px-5 py-5 sm:px-8">
               <div className="grid grid-cols-2 gap-2">
                 <Link
-                  href="/"
+                  href="/services"
                   onClick={closeAll}
                   className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
                 >
-                  {t("Home", "Accueil")}
-                </Link>
-                <Link
-                  href="/about"
-                  onClick={closeAll}
-                  className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
-                >
-                  {t("About", "À propos")}
-                </Link>
-                <Link
-                  href="/products"
-                  onClick={closeAll}
-                  className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
-                >
-                  {t("Products", "Produits")}
-                </Link>
-                <Link
-                  href="/portfolio"
-                  onClick={closeAll}
-                  className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
-                >
-                  {t("Work", "Réalisations")}
+                  Services
                 </Link>
                 <Link
                   href="/references"
@@ -615,11 +470,18 @@ export default function Navbar({ services, projects }: NavbarProps) {
                   {t("References", "Références")}
                 </Link>
                 <Link
-                  href="/news"
+                  href="/products"
                   onClick={closeAll}
                   className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
                 >
-                  {t("News", "Actualités")}
+                  {t("Products", "Produits")}
+                </Link>
+                <Link
+                  href="/about"
+                  onClick={closeAll}
+                  className="rounded-xl bg-neutral-50 px-4 py-3 text-sm font-semibold text-primary"
+                >
+                  {t("About", "À propos")}
                 </Link>
                 <Link
                   href="/contact"

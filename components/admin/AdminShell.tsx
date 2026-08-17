@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  BriefcaseBusiness,
   Building2,
   ChevronRight,
   CircleHelp,
@@ -22,7 +21,6 @@ import { logoutAction } from "@/backend/admin/auth-actions";
 
 const links = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
-  { href: "/admin/content/projects", label: "Projects", icon: BriefcaseBusiness },
   { href: "/admin/content/organizations", label: "Organizations", icon: Building2 },
   { href: "/admin/content/services", label: "Services", icon: Settings2 },
   { href: "/admin/content/products", label: "Products", icon: Package },

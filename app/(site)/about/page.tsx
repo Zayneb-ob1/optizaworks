@@ -67,7 +67,7 @@ export default async function AboutPage() {
             <span className="h-px w-8 bg-accent/50" />
             {t("About Optizaworks", "À propos d’Optizaworks")}
           </p>
-          <h1 className="mt-6 max-w-5xl text-5xl font-semibold leading-[1.05] tracking-[-0.045em] text-primary sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-7xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-primary">
             {t(
               "Moroccan technology, built for lasting digital independence.",
               "Une technologie marocaine conçue pour une indépendance numérique durable.",
@@ -88,7 +88,7 @@ export default async function AboutPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Who we are", "Qui sommes-nous")}
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t(
                 "Expertise rooted in real institutional needs.",
                 "Une expertise ancrée dans les besoins réels des institutions.",
@@ -164,7 +164,7 @@ export default async function AboutPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Our approach", "Notre approche")}
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t(
                 "Three principles, applied to every engagement.",
                 "Trois principes appliqués à chaque mission.",
@@ -202,7 +202,7 @@ export default async function AboutPage() {
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                 {t("Data sovereignty", "Souveraineté des données")}
               </p>
-              <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-4xl">
+              <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-primary">
                 {t(
                   "Architecture and hosting choices you can understand and control.",
                   "Des choix d’architecture et d’hébergement que vous pouvez comprendre et maîtriser.",
@@ -216,10 +216,10 @@ export default async function AboutPage() {
               </p>
             </div>
             <Link
-              href="/portfolio?type=web"
+              href="/references"
               className="inline-flex items-center gap-2 justify-self-start rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-primary"
             >
-              {t("See our work", "Découvrir nos réalisations")}
+              {t("See our references", "Découvrir nos références")}
               <ArrowRight size={17} />
             </Link>
           </div>

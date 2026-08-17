@@ -181,7 +181,7 @@ export default function ServicesCarousel({ services }: ServicesCarouselProps) {
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-neutral text-primary">
                   <ActiveIcon size={25} strokeWidth={1.65} aria-hidden="true" />
                 </span>
-                <h3 className="text-3xl font-semibold tracking-[-0.035em] text-primary sm:text-4xl">
+                <h3 className="text-3xl font-semibold tracking-[-0.035em] text-primary">
                   {activeService.title}
                 </h3>
               </div>

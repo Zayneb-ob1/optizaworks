@@ -1,5 +1,4 @@
 import type { MetadataRoute } from "next";
-import { getPublishedProjects } from "@/backend/content/queries";
 import { absoluteSiteUrl } from "@/shared/seo/site";
 
 const publicRoutes = [
@@ -8,7 +7,6 @@ const publicRoutes = [
   "/careers",
   "/contact",
   "/news",
-  "/portfolio",
   "/products",
   "/references",
   "/services",
@@ -20,13 +18,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.7,
   }));
-  const caseStudies: MetadataRoute.Sitemap = getPublishedProjects().map(
-    (project) => ({
-      url: absoluteSiteUrl(`/portfolio/${project.slug}`),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    }),
-  );
-
-  return [...fixedPages, ...caseStudies];
+  return fixedPages;
 }

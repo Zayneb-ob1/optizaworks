@@ -8,7 +8,6 @@ import FaqAccordion from "@/components/FaqAccordion";
 import HeroSection from "@/components/HeroSection";
 import { HeroBackdrop } from "@/components/hero/HeroStatic";
 import HomeNewsCarousel from "@/components/HomeNewsCarousel";
-import HomeWorkShowcase from "@/components/HomeWorkShowcase";
 import PartnerLogoStrip from "@/components/PartnerLogoStrip";
 import ProjectCTA from "@/components/ProjectCTA";
 import ScrollReveal, { StaggerReveal } from "@/components/ScrollReveal";
@@ -19,7 +18,6 @@ import {
   getPublishedNews,
   getPublishedOrganizations,
   getPublishedProducts,
-  getPublishedProjects,
   getPublishedServices,
 } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
@@ -34,21 +32,6 @@ export default async function Home() {
   const t = (english: string, french: string) =>
     translate(locale, english, french);
   const services = getPublishedServices(locale);
-  const selectedProjectSlugs = [
-    "artisanat-souss-massa",
-    "encg-settat",
-    "arep-dakhla",
-  ];
-  const selectedProjectOrder = new Map(
-    selectedProjectSlugs.map((slug, index) => [slug, index]),
-  );
-  const projects = getPublishedProjects({ locale })
-    .filter((project) => selectedProjectOrder.has(project.slug))
-    .sort(
-      (first, second) =>
-        (selectedProjectOrder.get(first.slug) ?? 0) -
-        (selectedProjectOrder.get(second.slug) ?? 0),
-    );
   const partners = getPublishedOrganizations();
   const faqs = getPublishedFaqs(locale);
   const news = getPublishedNews(locale);
@@ -63,12 +46,11 @@ export default async function Home() {
     }),
   );
   const partnerLogos = partners.map(
-    ({ name, shortName, logo, category, website, featured }) => ({
+    ({ name, shortName, logo, category, featured }) => ({
       name,
       shortName,
       logo,
       category,
-      website,
       featured,
     }),
   );
@@ -79,37 +61,31 @@ export default async function Home() {
 
       <section id="services" aria-labelledby="services-heading" className="home-deferred-render bg-neutral-50 py-16 sm:py-20">
         <div className="site-container">
-          <h2 id="services-heading" className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+          <h2 id="services-heading" className="text-3xl font-semibold tracking-[-0.035em] text-primary">
             {t("What we do", "Ce que nous faisons")}
           </h2>
           <ServicesCarousel services={carouselServices} />
         </div>
       </section>
 
-      <HomeWorkShowcase projects={projects} locale={locale} />
+      <PartnerLogoStrip partners={partnerLogos} locale={locale} />
 
-      <section id="products" aria-labelledby="products-heading" className="home-deferred-render bg-primary-dark py-16 text-white sm:py-20">
+      <section id="products" aria-labelledby="products-heading" className="home-deferred-render bg-primary-dark py-10 text-white sm:py-12">
         <div className="site-container">
-          <ScrollReveal className="grid gap-8 border-b border-white/15 pb-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-16">
+          <ScrollReveal className="flex flex-col gap-4 border-b border-white/15 pb-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/50">
                 <span className="h-px w-8 bg-accent" aria-hidden="true" />
                 {t("Our product suite", "Notre gamme de produits")}
               </p>
-              <h2 id="products-heading" className="mt-5 max-w-2xl text-4xl font-semibold leading-[0.98] tracking-[-0.045em] sm:text-6xl">
+              <h2 id="products-heading" className="mt-2 max-w-2xl text-3xl font-semibold leading-[1] tracking-[-0.04em]">
                 {t("CONEKE, module by module.", "CONEKE, module par module.")}
               </h2>
             </div>
-            <div className="lg:pb-1 lg:justify-self-end">
-              <p className="max-w-xl text-sm leading-7 text-white/60 sm:text-[15px]">
-                {t(
-                  "A shared sovereign foundation for HR, finance, and accounting—each module can work independently or as part of one connected platform.",
-                  "Une base souveraine commune pour les ressources humaines, la finance et la comptabilité : chaque module peut fonctionner seul ou au sein d’une plateforme connectée.",
-                )}
-              </p>
+            <div className="shrink-0 sm:pb-0.5">
               <Link
                 href="/products"
-                className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white transition-colors hover:text-[#c89ae5]"
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-white transition-colors hover:text-[#c89ae5]"
               >
                 {t("Explore the CONEKE suite", "Découvrir la gamme CONEKE")}
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" aria-hidden="true" />
@@ -125,7 +101,7 @@ export default async function Home() {
               <Link
                 key={product.code}
                 href={`/products#product-${product.code.toLowerCase()}`}
-                className="group grid h-full grid-cols-[2.5rem_minmax(0,1fr)] gap-5 py-7 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b878df] focus-visible:ring-offset-4 focus-visible:ring-offset-primary-dark sm:py-9 lg:grid-cols-[3.5rem_0.8fr_1.2fr_auto] lg:items-center lg:gap-8"
+                className="group grid h-full grid-cols-[2.5rem_minmax(0,1fr)] gap-5 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b878df] focus-visible:ring-offset-4 focus-visible:ring-offset-primary-dark sm:py-6 lg:grid-cols-[3.5rem_0.8fr_1.2fr_auto] lg:items-center lg:gap-8"
               >
                 <span className="font-mono text-xs tracking-[0.18em] text-white/30">
                   {String(index + 1).padStart(2, "0")}
@@ -161,7 +137,7 @@ export default async function Home() {
       <section id="about" aria-labelledby="founder-heading" className="home-deferred-render bg-primary-dark py-14 text-white sm:py-16">
         <ScrollReveal className="site-container grid gap-8 lg:grid-cols-[0.55fr_1.45fr] lg:gap-12">
           <div>
-            <h2 id="founder-heading" className="text-xs font-semibold uppercase tracking-[0.2em] text-white/55">
+            <h2 id="founder-heading" className="text-3xl font-semibold tracking-[-0.03em] text-white">
               {t("From our founder", "Le mot du fondateur")}
             </h2>
             <div className="mt-6 flex items-center gap-3 text-sm text-white/65">
@@ -183,16 +159,14 @@ export default async function Home() {
         </ScrollReveal>
       </section>
 
-      <PartnerLogoStrip partners={partnerLogos} locale={locale} />
-
       <section id="news" aria-labelledby="news-heading" className="home-deferred-render bg-neutral-50 py-16 sm:py-20">
         <ScrollReveal className="site-container">
           <div className="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-            <div>
+            <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                 {t("Latest news", "Dernières actualités")}
               </p>
-              <h2 id="news-heading" className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.04em] text-primary sm:text-5xl">
+              <h2 id="news-heading" className="mt-4 max-w-5xl text-3xl font-semibold tracking-[-0.035em] text-primary">
                 {t(
                   "What we are building, learning, and sharing.",
                   "Ce que nous construisons, apprenons et partageons.",
@@ -222,7 +196,7 @@ export default async function Home() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Common questions", "Questions fréquentes")}
             </p>
-            <h2 id="faq-heading" className="mt-4 text-4xl font-semibold leading-[1.02] tracking-[-0.04em] text-primary sm:text-5xl">
+            <h2 id="faq-heading" className="mt-4 text-3xl font-semibold leading-[1.05] tracking-[-0.035em] text-primary">
               {t("A clear start.", "Commencer en toute clarté.")}
             </h2>
             <p className="mt-5 max-w-sm text-sm leading-7 text-neutral-500">

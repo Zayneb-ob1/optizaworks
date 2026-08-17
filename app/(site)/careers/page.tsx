@@ -45,7 +45,7 @@ export default async function CareersPage() {
             <span className="h-px w-8 bg-accent/50" />
             {t("Careers", "Carrières")}
           </p>
-          <h1 className="mt-6 max-w-5xl text-5xl font-semibold leading-[1.05] tracking-[-0.045em] text-primary sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-5xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-primary">
             {t(
               "Build tomorrow’s team with us.",
               "Construisez avec nous l’équipe de demain.",
@@ -66,7 +66,7 @@ export default async function CareersPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Our culture", "Notre culture")}
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t(
                 "Responsibility, proximity, and useful work.",
                 "Responsabilité, proximité et travail utile.",
@@ -104,7 +104,7 @@ export default async function CareersPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/50">
               {t("Spontaneous application", "Candidature spontanée")}
             </p>
-            <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] sm:text-5xl">
+            <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em]">
               {t(
                 "Your profile may fit our next project.",
                 "Votre profil pourrait correspondre à notre prochain projet.",

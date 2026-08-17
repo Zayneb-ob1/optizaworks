@@ -85,7 +85,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             <span className="h-px w-8 bg-accent" />
             {t("Newsroom", "Actualités")}
           </p>
-          <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-4xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em]">
             {t(
               "Ideas, releases, and progress from our team.",
               "Idées, lancements et avancées de notre équipe.",
@@ -187,7 +187,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                   ? t("Search results", "Résultats de recherche")
                   : t("All updates", "Toutes les actualités")}
               </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-primary sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-primary">
                 {t(
                   "News from Optizaworks",
                   "Les actualités d’Optizaworks",

@@ -1,9 +1,8 @@
-import { ArrowRight, BriefcaseBusiness, Building2, Inbox, Settings2 } from "lucide-react";
+import { ArrowRight, Building2, Inbox, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { getAdminDashboardData } from "@/backend/admin/queries";
 
 const stats = [
-  { key: "projectCount", label: "Projects", icon: BriefcaseBusiness, href: "/admin/content/projects" },
   { key: "organizationCount", label: "Organizations", icon: Building2, href: "/admin/content/organizations" },
   { key: "serviceCount", label: "Services", icon: Settings2, href: "/admin/content/services" },
   { key: "unreadMessageCount", label: "New messages", icon: Inbox, href: "/admin/messages" },
@@ -24,7 +23,7 @@ export default function AdminDashboardPage() {
         </p>
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (

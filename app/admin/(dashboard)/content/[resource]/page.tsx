@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import AdminResourceManager from "@/components/admin/AdminResourceManager";
-import { getAdminResourceRows, getOrganizationOptions } from "@/backend/admin/queries";
+import { getAdminResourceRows } from "@/backend/admin/queries";
 import { isAdminResource } from "@/shared/admin/resources";
 
 type AdminContentPageProps = {
@@ -9,13 +9,12 @@ type AdminContentPageProps = {
 
 export default async function AdminContentPage({ params }: AdminContentPageProps) {
   const { resource } = await params;
-  if (!isAdminResource(resource)) notFound();
+  if (!isAdminResource(resource) || resource === "projects") notFound();
 
   return (
     <AdminResourceManager
       resource={resource}
       rows={getAdminResourceRows(resource)}
-      organizationOptions={resource === "projects" ? getOrganizationOptions() : undefined}
     />
   );
 }

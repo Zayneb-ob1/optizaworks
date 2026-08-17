@@ -156,10 +156,10 @@ export default function HeroSection({ backdrop, locale }: HeroSectionProps) {
 
             <div className="mt-8 flex flex-col items-center gap-4 lg:items-start">
               <Link
-                href="/portfolio"
+                href="/references"
                 className="group inline-flex min-h-12 items-center gap-3.5 rounded-full border border-white/25 bg-accent px-7 py-3.5 text-sm font-semibold text-white shadow-[0_14px_38px_rgba(106,13,173,0.48)] transition-[transform,background-color,box-shadow] duration-300 hover:-translate-y-0.5 hover:bg-[#7d20ba] hover:shadow-[0_18px_44px_rgba(106,13,173,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#03040b] sm:px-8 sm:text-[15px]"
               >
-                {t("Explore our work", "Découvrir nos réalisations")}
+                {t("Discover our references", "Découvrir nos références")}
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-accent">
                   <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
                 </span>

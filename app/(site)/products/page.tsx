@@ -34,7 +34,7 @@ export default async function ProductsPage() {
             <span className="h-px w-8 bg-accent/50" />
             {t("The CONEKE suite", "La gamme CONEKE")}
           </p>
-          <h1 className="mt-6 max-w-5xl text-5xl font-semibold leading-[1.05] tracking-[-0.045em] text-primary sm:text-6xl lg:text-7xl">
+          <h1 className="mt-6 max-w-5xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-primary">
             {t(
               "One platform, built around interoperable business modules.",
               "Une plateforme conçue autour de modules métier interopérables.",
@@ -74,7 +74,7 @@ export default async function ProductsPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Available solutions", "Solutions disponibles")}
             </p>
-            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t("Three modules in production.", "Trois modules en production.")}
             </h2>
           </div>
@@ -117,7 +117,7 @@ export default async function ProductsPage() {
       <section className="bg-neutral-100 py-20 sm:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20 lg:px-10">
           <div>
-            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t("Modules in development", "Modules en développement")}
             </h2>
           </div>

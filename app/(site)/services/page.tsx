@@ -40,7 +40,7 @@ export default async function ServicesPage() {
             {t("Our capabilities", "Nos expertises")}
           </p>
           <div className="mt-6 grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-            <h1 className="max-w-4xl text-5xl font-semibold leading-[1.05] tracking-[-0.045em] text-primary sm:text-6xl lg:text-7xl">
+            <h1 className="max-w-4xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em] text-primary">
               {t(
                 "Technical depth across the full digital lifecycle.",
                 "Une expertise technique sur l’ensemble du cycle de vie numérique.",
@@ -100,7 +100,7 @@ export default async function ServicesPage() {
                     <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
                       {String(index + 1).padStart(2, "0")}
                     </p>
-                    <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-4xl">
+                    <h2 className="mt-3 text-3xl font-semibold tracking-[-0.03em] text-primary">
                       {service.title}
                     </h2>
                     <p className="mt-5 max-w-xl text-sm leading-7 text-neutral-500">
@@ -133,7 +133,7 @@ export default async function ServicesPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Need several capabilities?", "Besoin de plusieurs expertises ?")}
             </p>
-            <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-5xl">
+            <h2 className="mt-4 max-w-3xl text-3xl font-semibold tracking-[-0.03em] text-primary">
               {t(
                 "We bring the right disciplines together as one team.",
                 "Nous réunissons les bonnes disciplines au sein d’une seule équipe.",

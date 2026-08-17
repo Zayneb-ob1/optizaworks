@@ -12,8 +12,8 @@ export default function Footer({ locale }: { locale: Locale }) {
       [t("CONEKE products", "Produits CONEKE"), "/products"],
     ],
     [
-      [t("Portfolio", "Réalisations"), "/portfolio"],
       [t("References", "Références"), "/references"],
+      [t("About", "À propos"), "/about"],
     ],
     [
       [t("News", "Actualités"), "/news"],
@@ -22,7 +22,6 @@ export default function Footer({ locale }: { locale: Locale }) {
   ];
 
   const bottomLinks = [
-    [t("About", "À propos"), "/about"],
     ["Contact", "/contact"],
   ];
 

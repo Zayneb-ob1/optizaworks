@@ -133,7 +133,7 @@ export default function ProjectCTA() {
             className="pointer-events-none absolute inset-0 -z-10 opacity-[0.22] [background-image:linear-gradient(rgba(50,16,68,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(50,16,68,0.08)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:linear-gradient(to_bottom,transparent,black_30%,black_70%,transparent)]"
           />
 
-          <h2 id="project-cta-heading" className="mx-auto max-w-2xl text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-primary sm:text-5xl">
+          <h2 id="project-cta-heading" className="mx-auto max-w-3xl text-balance text-3xl font-semibold leading-[1.08] tracking-[-0.03em] text-primary">
             {t("Have a project in mind?", "Vous avez un projet en tête ?")}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-pretty text-[15px] leading-7 text-neutral-700">

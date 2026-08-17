@@ -19,10 +19,8 @@ const reasons: Reason[] = [
     labelFr: "Solutions sur mesure",
     title: "Designed around you.",
     titleFr: "Conçues autour de vous.",
-    description:
-      "Your users, workflows, and goals shape the solution. We never force a project into a recycled template.",
-    descriptionFr:
-      "Vos utilisateurs, vos processus et vos objectifs façonnent la solution. Nous n’imposons jamais un modèle recyclé à votre projet.",
+    description: "A solution precisely aligned with your goals and workflows.",
+    descriptionFr: "Une solution précisément adaptée à vos objectifs et processus.",
     icon: ScanFace,
   },
   {
@@ -30,10 +28,8 @@ const reasons: Reason[] = [
     labelFr: "Livraison rapide",
     title: "Progress without the fog.",
     titleFr: "Avancer en toute clarté.",
-    description:
-      "Focused build cycles, visible milestones, and direct communication keep every project moving with purpose.",
-    descriptionFr:
-      "Des cycles ciblés, des jalons visibles et une communication directe permettent à chaque projet d’avancer efficacement.",
+    description: "Focused delivery, clear milestones, and direct communication.",
+    descriptionFr: "Une livraison maîtrisée, des jalons clairs et une communication directe.",
     icon: Gauge,
   },
   {
@@ -41,10 +37,8 @@ const reasons: Reason[] = [
     labelFr: "La sécurité d’abord",
     title: "Protected from the start.",
     titleFr: "Protégé dès le départ.",
-    description:
-      "Security is built into architecture, development, infrastructure, and release—not added at the end.",
-    descriptionFr:
-      "La sécurité est intégrée à l’architecture, au développement, à l’infrastructure et à la mise en production, jamais ajoutée à la fin.",
+    description: "Security integrated from architecture through production.",
+    descriptionFr: "La sécurité intégrée de l’architecture à la mise en production.",
     icon: ShieldCheck,
   },
   {
@@ -52,10 +46,8 @@ const reasons: Reason[] = [
     labelFr: "Accompagnement continu",
     title: "We stay after launch.",
     titleFr: "Nous restons à vos côtés après le lancement.",
-    description:
-      "The team that understands your product remains available to monitor, improve, and help it grow.",
-    descriptionFr:
-      "L’équipe qui connaît votre produit reste disponible pour le superviser, l’améliorer et accompagner son évolution.",
+    description: "A committed team supporting your product after launch.",
+    descriptionFr: "Une équipe engagée qui accompagne votre produit après son lancement.",
     icon: Headphones,
   },
 ];
@@ -78,7 +70,7 @@ export default function WhyOptizaLab({ locale }: { locale: Locale }) {
             </p>
             <h2
               id="why-heading"
-              className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-primary sm:text-4xl lg:whitespace-nowrap xl:text-5xl"
+              className="mt-4 text-3xl font-semibold tracking-[-0.035em] text-primary lg:whitespace-nowrap"
             >
               {t(
                 "Clear thinking, built into every layer.",

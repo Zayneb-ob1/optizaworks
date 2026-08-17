@@ -3,25 +3,18 @@ import LanguageProvider from "@/components/LanguageProvider";
 import MotionProvider from "@/components/MotionProvider";
 import Navbar from "@/components/Navbar";
 import SmoothScroll from "@/components/SmoothScroll";
-import { getPublishedProjects, getPublishedServices } from "@/backend/content/queries";
+import { getPublishedServices } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
 import { translate } from "@/shared/i18n/config";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale();
   const services = getPublishedServices(locale);
-  const projects = getPublishedProjects({ featuredOnly: true, limit: 3, locale });
   const navigationServices = services.map(({ slug, title, description, icon }) => ({
     slug,
     title,
     description,
     icon,
-  }));
-  const navigationProjects = projects.map(({ slug, title, categoryLabel, image }) => ({
-    slug,
-    title,
-    categoryLabel,
-    image,
   }));
 
   return (
@@ -34,7 +27,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           {translate(locale, "Skip to main content", "Aller au contenu principal")}
         </a>
         <SmoothScroll />
-        <Navbar services={navigationServices} projects={navigationProjects} />
+        <Navbar services={navigationServices} />
         <main id="main-content" tabIndex={-1}>
           {children}
         </main>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowUpRight, Building2, Network } from "lucide-react";
+import { Building2, Network } from "lucide-react";
 import Image from "next/image";
 import { getPublishedOrganizations } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
@@ -79,7 +79,7 @@ export default async function ReferencesPage() {
               <span className="h-px w-8 bg-accent" />
               {t("Institutional references", "Références institutionnelles")}
             </p>
-            <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-[1.05] tracking-[-0.045em] sm:text-6xl lg:text-7xl">
+            <h1 className="mt-6 max-w-3xl text-3xl font-semibold leading-[1.08] tracking-[-0.035em]">
               {t(
                 "Organizations that trust our digital work.",
                 "Les organisations qui font confiance à notre expertise numérique.",
@@ -128,21 +128,15 @@ export default async function ReferencesPage() {
 
       <section className="bg-neutral-50 py-20 sm:py-28">
         <div className="site-container">
-          <div className="flex flex-col gap-4 border-b border-primary/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
+          <div className="border-b border-primary/10 pb-8">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
                 {t("Our references", "Nos références")}
               </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-primary sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-semibold tracking-[-0.035em] text-primary">
                 {t("All partner organizations", "Toutes les organisations partenaires")}
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-7 text-neutral-500 sm:text-right">
-              {t(
-                "Select a logo to visit the organization’s official website.",
-                "Sélectionnez un logo pour visiter le site officiel de l’organisation.",
-              )}
-            </p>
           </div>
 
           <div className="mt-12 space-y-14 sm:space-y-16">
@@ -176,19 +170,11 @@ export default async function ReferencesPage() {
 
                   <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 sm:gap-5 lg:grid-cols-5">
                     {groupOrganizations.map((organization) => (
-                      <a
+                      <div
                         key={organization.shortName}
-                        href={organization.website}
-                        target="_blank"
-                        rel="noreferrer"
                         title={organization.name}
-                        aria-label={t(
-                          `Visit ${organization.name} official website`,
-                          `Visiter le site officiel de ${organization.name}`,
-                        )}
-                        className="group relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl border border-primary/10 bg-white p-5 shadow-[0_18px_45px_-35px_rgba(50,16,68,0.35)] transition-[transform,border-color,box-shadow] duration-300 hover:-translate-y-1 hover:border-accent/35 hover:shadow-[0_24px_55px_-32px_rgba(106,13,173,0.38)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 sm:p-6"
+                        className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-3xl border border-primary/10 bg-white p-5 shadow-[0_18px_45px_-35px_rgba(50,16,68,0.35)] sm:p-6"
                       >
-                        <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100 group-focus-visible:scale-x-100" />
                         <span className="relative h-full w-full">
                           <Image
                             src={organization.logo}
@@ -200,14 +186,10 @@ export default async function ReferencesPage() {
                             loading="lazy"
                             quality={82}
                             sizes="(max-width: 640px) calc(50vw - 28px), (max-width: 1024px) calc(33vw - 28px), 220px"
-                            className="object-contain transition-transform duration-300 group-hover:scale-[1.04]"
+                            className="object-contain"
                           />
                         </span>
-                        <span className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-sm transition-[opacity,transform] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:opacity-100">
-                          <ArrowUpRight size={14} aria-hidden="true" />
-                        </span>
-                        <span className="sr-only">{organization.name}</span>
-                      </a>
+                      </div>
                     ))}
                   </div>
                 </section>

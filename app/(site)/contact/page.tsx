@@ -32,7 +32,7 @@ export default async function ContactPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               {t("Contact", "Contact")}
             </p>
-            <h1 className="mt-5 text-5xl font-semibold tracking-[-0.045em] text-primary sm:text-6xl">
+            <h1 className="mt-5 text-3xl font-semibold tracking-[-0.035em] text-primary">
               {t("Let’s build something useful.", "Construisons quelque chose d’utile.")}
             </h1>
             <p className="mt-6 max-w-md text-base leading-8 text-neutral-500">
