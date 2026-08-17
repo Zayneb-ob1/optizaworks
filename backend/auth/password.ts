@@ -1,5 +1,5 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-
+//#endregion
 const KEY_LENGTH = 64;
 
 export function hashPassword(password: string) {
