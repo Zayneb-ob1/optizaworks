@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ArrowRight, Check, Layers3, Sparkles } from "lucide-react";
+import { ArrowRight, Check, Layers3 } from "lucide-react";
 import Link from "next/link";
 import { getPublishedProducts } from "@/backend/content/queries";
 import { getLocale } from "@/backend/i18n/request-locale";
@@ -117,8 +117,7 @@ export default async function ProductsPage() {
       <section className="bg-neutral-100 py-20 sm:py-28">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.75fr_1.25fr] lg:gap-20 lg:px-10">
           <div>
-            <Sparkles size={24} className="text-accent" strokeWidth={1.6} />
-            <h2 className="mt-5 text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-4xl">
+            <h2 className="text-3xl font-semibold tracking-[-0.03em] text-primary sm:text-4xl">
               {t("Modules in development", "Modules en développement")}
             </h2>
           </div>

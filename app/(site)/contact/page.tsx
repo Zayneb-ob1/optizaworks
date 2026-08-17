@@ -66,8 +66,8 @@ export default async function ContactPage() {
                   <MapPin size={18} />
                 </span>
                 {t(
-                  "Technopark Agadir, Morocco · Working worldwide",
-                  "Technopark Agadir, Maroc · Intervention dans le monde entier",
+                  "Technopark Agadir, Morocco",
+                  "Technopark Agadir, Maroc",
                 )}
               </p>
             </div>
